@@ -12,7 +12,7 @@ export default async function RepositoryPage() {
   return (
     <div className="p-8 px-12 w-full max-w-7xl mx-auto flex flex-1 flex-col gap-8">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4"> 
           <div className="h-12 w-1 bg-linear-to-b from-healthy-500 to-transparent" />
           <div className="flex flex-col gap-0.5">
             <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-neutral-50 to-neutral-400 tracking-tight uppercase">
