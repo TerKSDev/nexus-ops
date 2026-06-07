@@ -1,7 +1,8 @@
 import prisma from "@/lib/prisma";
 import { GitMerge, GitCommit, GitPullRequest, Check, X } from "lucide-react";
-import { addRepo } from "@/actions/repository";
 import AddRepoForm from "./components/AddRepoForm";
+
+export const dynamic = "force-dynamic";
 
 export default async function RepositoryPage() {
   const repos = await prisma.githubRepo.findMany({
