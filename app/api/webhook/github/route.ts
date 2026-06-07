@@ -15,7 +15,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing headers" }, { status: 400 });
     }
 
-    const repoFullName = payload.repository?.full_name; // 例如：clmh92/nexus-ops
+    const repoFullName = payload.repository?.full_name;
     
     // 從資料庫找出對應的 Repo
     const dbRepo = await prisma.githubRepo.findFirst({

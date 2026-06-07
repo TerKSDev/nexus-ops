@@ -4,7 +4,13 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import crypto from "crypto";
 
-export async function addRepo(prevState: any, formData: FormData) {
+type ActionState = {
+  error?: string;
+  success?: boolean;
+  secret?: string | null;
+} | null;
+
+export async function addRepo(prevState: ActionState, formData: FormData) {
   const url = formData.get("url") as string;
 
   if (!url) return { error: "URL is required" };
