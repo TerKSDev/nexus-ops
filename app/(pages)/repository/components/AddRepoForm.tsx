@@ -1,26 +1,22 @@
 "use client";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useState } from "react";
 import { addRepo } from "@/actions/repository";
 import SecretModal from "./SecretModal";
 
 export default function AddRepoForm() {
   const [state, formAction, isPending] = useActionState(addRepo, null);
-  const [showModal, setShowModal] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [closedSecrets, setClosedSecrets] = useState<string[]>([]);
+  const [copied, setCopied] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (state?.success && state?.secret) {
-      setShowModal(true);
-    }
-  }, [state]);
+  // 不使用 useEffect，直接透過 state 推導出是否要顯示 Modal
+  const showModal = state?.success && state?.secret && !closedSecrets.includes(state.secret);
 
-  const handleCopy = () => {
-    if (!state?.secret) return;
-    navigator.clipboard.writeText(state.secret);
-    setCopied(true);
+  const handleCopy = (text: string, type: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(type);
     setTimeout(() => {
-      setCopied(false);
-    }, 3000);
+      setCopied(null);
+    }, 5000);
   };
 
   const handleDownload = () => {
@@ -36,7 +32,9 @@ export default function AddRepoForm() {
   };
 
   const handleClose = () => {
-    setShowModal(false);
+    if (state?.secret) {
+      setClosedSecrets([...closedSecrets, state.secret]);
+    }
   };
 
   return (
