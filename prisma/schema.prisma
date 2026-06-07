@@ -13,25 +13,57 @@ datasource db {
 }
 
 model Services {
-  id          String         @id @default(uuid())
+  id          String   @id @default(uuid())
   name        String
   description String?
-  status      ServicesStatus @default(healthy)
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  status      Status   @default(HEALTHY)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  logs Logs[]
+}
+
+model GithubRepo {
+  id            String   @id @default(uuid())
+  name          String
+  url           String?
+  webhookSecret String? // 新增：用來驗證 GitHub Webhook 來源的密鑰
+  description   String?
+  status        Status   @default(HEALTHY)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   logs Logs[]
 }
 
 model Logs {
   id        String   @id @default(uuid())
-  serviceId String
-  service   Services @relation(fields: [serviceId], references: [id])
   createdAt DateTime @default(now())
+
+  // 一條 Log 可以屬於 Service 或 GithubRepo (設為 Optional)
+  serviceId String?
+  service   Services? @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  repoId String?
+  repo   GithubRepo? @relation(fields: [repoId], references: [id], onDelete: Cascade)
+
+  message String
+  type    LogType @default(SYSTEM)
+  status  Status  @default(HEALTHY)
+
+  // 用於儲存彈性的資料，例如：{ "author": "clmh92", "commitHash": "c7a8b9", "duration": 25 }
+  metadata Json?
 }
 
-enum ServicesStatus {
-  healthy
-  warning
-  critical
+enum Status {
+  HEALTHY
+  WARNING
+  CRITICAL
+}
+
+enum LogType {
+  SYSTEM
+  COMMIT
+  PULL_REQUEST
+  DEPLOYMENT
 }
