@@ -16,7 +16,7 @@ export default function RootLayout({
     <html lang="en" className={`h-full antialiased`}>
       <body className="min-h-screen flex flex-1 overflow-hidden">
         <SideNav />
-        <main className="flex flex-1 overflow-y-auto">{children}</main>
+        <main className="flex-1 overflow-y-auto h-screen flex flex-col relative">{children}</main>
       </body>
     </html>
   );
