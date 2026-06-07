@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-neutral-50: #f4f7f4;
+  --color-neutral-100: #e1e8e1;
+  --color-neutral-200: #c6d1c6;
+  --color-neutral-300: #a1b8a1;
+  --color-neutral-400: #7e9c7e;
+  --color-neutral-500: #5c805c;
+  --color-neutral-600: #426642;
+  --color-neutral-700: #304d30;
+  --color-neutral-800: #222f22;
+  --color-neutral-900: #141a14;
+  --color-neutral-950: #0b0f0b;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-healthy-50: #e6ffe6;
+  --color-healthy-100: #b3ffcc;
+  --color-healthy-200: #80ffb2;
+  --color-healthy-300: #4dff99;
+  --color-healthy-400: #1aff7f;
+  --color-healthy-500: #00ff66;
+  --color-healthy-600: #00cc52;
+  --color-healthy-700: #00993d;
+  --color-healthy-800: #006629;
+  --color-healthy-900: #003314;
+  --color-healthy-950: #001a0a;
+
+  --color-warning-50: #fff5e6;
+  --color-warning-100: #ffe0b3;
+  --color-warning-200: #ffcc80;
+  --color-warning-300: #ffb84d;
+  --color-warning-400: #ffa31a;
+  --color-warning-500: #ff9900;
+  --color-warning-600: #cc7a00;
+  --color-warning-700: #995c00;
+  --color-warning-800: #663d00;
+  --color-warning-900: #331f00;
+  --color-warning-950: #1a0f00;
+
+  --color-critical-50: #ffe6e6;
+  --color-critical-100: #ffb3b3;
+  --color-critical-200: #ff8080;
+  --color-critical-300: #ff4d4d;
+  --color-critical-400: #ff1a1a;
+  --color-critical-500: #ff3333;
+  --color-critical-600: #cc2929;
+  --color-critical-700: #991f1f;
+  --color-critical-800: #661414;
+  --color-critical-900: #330a0a;
+  --color-critical-950: #1a0505;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-mono);
+  background-color: var(--color-neutral-950);
+  color: var(--color-neutral-100);
 }
