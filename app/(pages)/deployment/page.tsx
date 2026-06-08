@@ -9,25 +9,25 @@ import {
 
 export default function VercelPage() {
   return (
-    <div className="p-8 px-12 w-full max-w-7xl mx-auto flex flex-col gap-8">
+    <div className="p-8 px-12 w-full max-w-7xl mx-auto flex flex-col gap-10">
       <div className="flex items-center justify-between relative">
         <div className="h-10 w-1 bg-linear-to-b from-healthy-500 to-transparent" />
         <div className="flex flex-col gap-0.5">
           <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-neutral-50 to-neutral-400 tracking-tight uppercase">
-            Vercel Deployments
+            Deployments
           </h1>
           <p className="text-neutral-400 tracking-wide text-sm font-medium">
             Track your application builds and deployments.
           </p>
         </div>
-        <button className="flex items-center gap-2 px-6 py-2.5 bg-neutral-100 text-neutral-950 font-bold rounded-xl hover:bg-white hover:shadow-[0_0_15px_rgba(255,255,255,0.4)] transition-all duration-300">
+        <button className="flex items-center gap-2 px-6 py-2.5 bg-neutral-100 text-neutral-950 font-bold rounded-lg hover:bg-white hover:shadow-[0_0_15px_rgba(255,255,255,0.4)] transition-all duration-300">
           <Triangle className="w-4 h-4 fill-current" />
           Deploy
         </button>
       </div>
 
       {/* Deployment List */}
-      <div className="bg-neutral-900/40 backdrop-blur-md border border-neutral-800/60 shadow-xl rounded-2xl overflow-hidden relative">
+      <div className="bg-neutral-900/40 backdrop-blur-md border border-neutral-800/60 shadow-xl rounded-lg overflow-hidden relative">
         <div className="absolute top-0 right-1/4 w-48 h-48 bg-healthy-500/10 rounded-full blur-3xl -mt-24 pointer-events-none" />
 
         <div className="p-6 border-b border-neutral-800/50 flex items-center justify-between bg-neutral-900/30 relative z-10">

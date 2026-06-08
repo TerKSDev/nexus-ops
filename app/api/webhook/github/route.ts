@@ -26,6 +26,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Repo not found" }, { status: 404 });
     }
 
+    if (!dbRepo.isActive) {
+      return NextResponse.json({ success: true, message: "Tracking paused" });
+    }
+
     // 安全驗證：確保請求真的是 GitHub 發過來的
     const hmac = crypto.createHmac("sha256", dbRepo.webhookSecret);
     const digest = "sha256=" + hmac.update(rawBody).digest("hex");
