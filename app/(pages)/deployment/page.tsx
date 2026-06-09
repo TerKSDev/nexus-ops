@@ -88,7 +88,7 @@ export default async function VercelPage() {
 
                 return (
                   <FadeIn delay={idx * 0.05} direction="left" key={dpl.id}>
-                    <div className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-neutral-800/40 transition-all duration-200 group relative">
+                    <div className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-neutral-800 transition-all duration-200 group relative">
                       {/* Status Side Border Indicator */}
                       {isBuilding && (
                         <div className="absolute left-0 top-0 bottom-0 w-1 bg-warning-400 shadow-[0_0_10px_rgba(255,215,0,0.8)]" />
@@ -135,7 +135,7 @@ export default async function VercelPage() {
                               addSuffix: true,
                             })}
                           </span>
-                          <span className="text-xs font-mono text-neutral-600 bg-neutral-800/50 px-2 rounded">
+                          <span className="text-xs font-mono text-neutral-600 bg-neutral-800 px-2 rounded">
                             {meta.sha || dpl.id.substring(0, 8)}
                           </span>
                         </div>
@@ -144,7 +144,7 @@ export default async function VercelPage() {
                           href={meta.url || "#"}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-2.5 rounded-lg border border-transparent hover:border-neutral-700 hover:bg-neutral-800/80 text-neutral-500 hover:text-healthy-400 transition-all duration-300 shadow-sm cursor-pointer"
+                          className="p-2.5 rounded-lg border border-transparent hover:border-neutral-700 hover:bg-neutral-800 text-neutral-500 hover:text-healthy-400 transition-all duration-300 shadow-sm cursor-pointer"
                           onClick={(e) => !meta.url && e.preventDefault()}
                         >
                           <ArrowUpRight className="w-4 h-4" />

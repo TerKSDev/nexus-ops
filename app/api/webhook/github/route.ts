@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import prisma from "@/lib/prisma";
+import { decrypt } from "@/lib/encryption";
 
 export async function POST(req: Request) {
   try {
@@ -37,6 +38,59 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
 
+    // 找出使用者的設定
+    const userSettings = await prisma.userSettings.findUnique({
+      where: { userId: dbRepo.userId },
+    });
+
+    // 定義發送通知的輔助函式
+    const sendNotifications = async (
+      type: "COMMIT" | "PULL_REQUEST" | "DEPLOYMENT",
+      status: "HEALTHY" | "WARNING" | "CRITICAL",
+      message: string
+    ) => {
+      if (!userSettings) return;
+
+      // 檢查是否應該發送該事件
+      let shouldSend = false;
+      if (status === "CRITICAL" && userSettings.notifyErrors) shouldSend = true;
+      if (type === "PULL_REQUEST" && userSettings.notifyPRs) shouldSend = true;
+      if (type === "DEPLOYMENT" && userSettings.notifyDeployments) shouldSend = true;
+
+      // Commit 預設不一定要發，除非有出錯
+      if (!shouldSend) return;
+
+      const discordWebhook = userSettings.enableDiscord && userSettings.discordWebhook ? decrypt(userSettings.discordWebhook) : null;
+      const telegramBotToken = userSettings.enableTelegram && userSettings.telegramBotToken ? decrypt(userSettings.telegramBotToken) : null;
+      const telegramChatId = userSettings.enableTelegram && userSettings.telegramChatId ? decrypt(userSettings.telegramChatId) : null;
+
+      const emoji = status === "CRITICAL" ? "🚨" : status === "WARNING" ? "⚠️" : "✅";
+      const title = `${emoji} Nexus Ops: [${repoFullName}]`;
+      const body = `**Event:** ${type}\n**Status:** ${status}\n**Details:** ${message}`;
+
+      // Discord
+      if (discordWebhook) {
+        fetch(discordWebhook, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: `${title}\n${body}` }),
+        }).catch((err) => console.error("Discord notification failed", err));
+      }
+
+      // Telegram
+      if (telegramBotToken && telegramChatId) {
+        const tgUrl = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
+        fetch(tgUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: telegramChatId,
+            text: `${title}\n${body}`,
+          }),
+        }).catch((err) => console.error("Telegram notification failed", err));
+      }
+    };
+
     // 處理 Git Push 事件
     if (eventType === "push") {
       const commit = payload.commits?.[0]; // 抓取最新的一個 Commit
@@ -53,6 +107,7 @@ export async function POST(req: Request) {
             },
           },
         });
+        await sendNotifications("COMMIT", "HEALTHY", `New commit: ${commit.message} by ${commit.author.name}`);
       }
     } 
     // 處理 Pull Request 事件
@@ -70,6 +125,7 @@ export async function POST(req: Request) {
           },
         },
       });
+      await sendNotifications("PULL_REQUEST", "HEALTHY", `PR #${pr.number}: ${pr.title} by ${pr.user.login}`);
     }
     // 處理 Deployment Status 事件 (支援 Vercel, Render 等外部部署工具回報給 GitHub 的狀態)
     else if (eventType === "deployment_status") {
@@ -101,6 +157,7 @@ export async function POST(req: Request) {
           },
         },
       });
+      await sendNotifications("DEPLOYMENT", mappedStatus, deployStatus.description || `Deployment ${deployStatus.state}`);
     }
 
     return NextResponse.json({ success: true });
