@@ -95,7 +95,7 @@ export default function GlobalActivityFeed({
                   />
                   {/* Hover background gradient */}
                   <motion.div
-                    className="absolute inset-0 bg-linear-to-r from-healthy-500/[0.05] to-transparent"
+                    className="absolute inset-0 bg-linear-to-r from-healthy-500/5 to-transparent"
                     variants={{ idle: { opacity: 0 }, hover: { opacity: 1 } }}
                     transition={{ duration: 0.2 }}
                   />

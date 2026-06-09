@@ -12,10 +12,10 @@ export default function Landing() {
     <div className="flex flex-col flex-1 items-center justify-center min-h-screen relative overflow-hidden">
       {/* Multi-layer ambient glow */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-healthy-500/[0.07] rounded-full blur-[130px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-healthy-500/[0.04] rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-healthy-500/4 rounded-full blur-[80px] pointer-events-none" />
 
       {/* Grid background */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,229,255,0.025)_1px,transparent_1px),linear-gradient(to_right,rgba(0,229,255,0.025)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,229,255,0.025)_1px,transparent_1px),linear-gradient(to_right,rgba(0,229,255,0.025)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_at_center,black_20%,transparent_70%)] pointer-events-none" />
 
       {/* Corner bracket decorations — full page corners */}
       <div className="absolute top-6 left-6 w-10 h-10 pointer-events-none opacity-30">
@@ -44,7 +44,7 @@ export default function Landing() {
           </div>
           {/* Layered rings */}
           <div className="absolute inset-0 rounded-full border border-healthy-500/10 scale-[1.25] animate-pulse" />
-          <div className="absolute inset-0 rounded-full border border-healthy-500/[0.06] scale-[1.6]" />
+          <div className="absolute inset-0 rounded-full border border-healthy-500/6 scale-[1.6]" />
         </div>
 
         {/* Title */}

@@ -28,7 +28,7 @@ export async function updateAccount(formData: FormData) {
       return { error: "User not found" };
     }
 
-    const updateData: any = {
+    const updateData: { email: string; password?: string; isGuest?: boolean } = {
       email,
     };
 
@@ -48,8 +48,8 @@ export async function updateAccount(formData: FormData) {
 
     revalidatePath("/settings");
     return { success: true };
-  } catch (error: any) {
-    if (error.code === 'P2002') {
+  } catch (error) {
+    if (typeof error === 'object' && error !== null && 'code' in error && error.code === 'P2002') {
       return { error: "Email already in use" };
     }
     console.error("Update account error:", error);

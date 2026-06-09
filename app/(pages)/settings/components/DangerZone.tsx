@@ -33,9 +33,9 @@ export default function DangerZone() {
 
   return (
     <>
-      <div className="bg-critical-500/[0.04] border border-critical-500/20 rounded-lg overflow-hidden flex flex-col shadow-[0_4px_24px_rgba(0,0,0,0.4)]">
+      <div className="bg-critical-500/4 border border-critical-500/20 rounded-lg overflow-hidden flex flex-col shadow-[0_4px_24px_rgba(0,0,0,0.4)]">
         {/* Panel Header — red accent */}
-        <div className="p-4 px-5 border-b border-critical-500/15 flex items-center gap-3 bg-critical-500/[0.06] relative z-10">
+        <div className="p-4 px-5 border-b border-critical-500/15 flex items-center gap-3 bg-critical-500/6 relative z-10">
           <div className="p-1.5 bg-critical-500/15 rounded border border-critical-500/20">
             <TriangleAlert className="w-4 h-4 text-critical-400" />
           </div>

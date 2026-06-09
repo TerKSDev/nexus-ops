@@ -76,11 +76,11 @@ export default function LoginPage() {
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-screen p-4 relative overflow-hidden">
       {/* Ambient background glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-healthy-500/[0.06] rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-healthy-500/[0.03] rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-healthy-500/6 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-healthy-500/3 rounded-full blur-[100px] pointer-events-none" />
 
       {/* Grid overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,229,255,0.025)_1px,transparent_1px),linear-gradient(to_right,rgba(0,229,255,0.025)_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_80%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,229,255,0.025)_1px,transparent_1px),linear-gradient(to_right,rgba(0,229,255,0.025)_1px,transparent_1px)] bg-size-[3rem_3rem] mask-[radial-gradient(ellipse_at_center,black_30%,transparent_80%)] pointer-events-none" />
 
       {/* Login card */}
       <motion.div
@@ -109,7 +109,7 @@ export default function LoginPage() {
 
         <div className="bg-neutral-900/95 border border-neutral-700/50 rounded-lg p-8 sm:p-10 shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_0_1px_rgba(0,229,255,0.04)]">
           {/* Inner ambient glow */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-healthy-500/[0.04] rounded-full blur-[60px] pointer-events-none -mt-16 -mr-16" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-healthy-500/4 rounded-full blur-[60px] pointer-events-none -mt-16 -mr-16" />
 
           {/* Logo / Header */}
           <div className="flex flex-col items-center text-center mb-8 relative z-10">
@@ -184,7 +184,7 @@ export default function LoginPage() {
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
-                  className="text-critical-400 text-xs bg-critical-500/[0.08] border border-critical-500/20 px-4 py-2.5 rounded-lg leading-relaxed"
+                  className="text-critical-400 text-xs bg-critical-500/8 border border-critical-500/20 px-4 py-2.5 rounded-lg leading-relaxed"
                 >
                   {errorMsg}
                 </motion.div>

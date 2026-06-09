@@ -68,7 +68,7 @@ function ModalPanel({ children }: { children: React.ReactNode }) {
         transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="bg-neutral-900/95 border border-neutral-700/50 p-10 rounded-lg max-w-md w-full relative overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_0_1px_rgba(0,229,255,0.04)]"
       >
-        <div className="absolute top-0 right-0 w-64 h-64 bg-healthy-500/[0.04] rounded-full blur-[60px] pointer-events-none -mt-12 -mr-12" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-healthy-500/4 rounded-full blur-[60px] pointer-events-none -mt-12 -mr-12" />
         <CornerBrackets />
         {children}
       </motion.div>

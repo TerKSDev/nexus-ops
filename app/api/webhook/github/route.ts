@@ -8,8 +8,9 @@ export async function POST(req: Request) {
     const signature = req.headers.get("x-hub-signature-256");
     const eventType = req.headers.get("x-github-event");
     
-    // 必須讀取 raw text 來驗證 HMAC，不能直接 await req.json()
-    const rawBody = await req.text();
+    // 必須讀取 raw buffer 來驗證 HMAC，避免字元編碼導致的長度差異
+    const buffer = Buffer.from(await req.arrayBuffer());
+    const rawBody = buffer.toString("utf8");
     const payload = JSON.parse(rawBody);
 
     if (!signature || !eventType) {
@@ -33,7 +34,7 @@ export async function POST(req: Request) {
 
     // 安全驗證：確保請求真的是 GitHub 發過來的
     const hmac = crypto.createHmac("sha256", dbRepo.webhookSecret);
-    const digest = "sha256=" + hmac.update(rawBody).digest("hex");
+    const digest = "sha256=" + hmac.update(buffer).digest("hex");
     if (signature !== digest) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }

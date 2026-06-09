@@ -72,7 +72,7 @@ export default function PendingActions({
                   />
                   {/* Hover background gradient */}
                   <motion.div
-                    className="absolute inset-0 bg-linear-to-r from-warning-500/[0.04] to-transparent"
+                    className="absolute inset-0 bg-linear-to-r from-warning-500/4 to-transparent"
                     variants={{ idle: { opacity: 0 }, hover: { opacity: 1 } }}
                     transition={{ duration: 0.2 }}
                   />

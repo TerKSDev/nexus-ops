@@ -107,7 +107,7 @@ export default function DeploymentList({
   if (deployments.length === 0 && selectedRepo === "all") {
     return (
       <div className="flex flex-col items-center justify-center p-12 flex-1 border border-neutral-800/60 rounded-lg bg-neutral-900/50 relative overflow-hidden group">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-healthy-500/[0.03] rounded-full blur-[100px] pointer-events-none group-hover:bg-healthy-500/[0.06] transition-all duration-700" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-healthy-500/3 rounded-full blur-[100px] pointer-events-none group-hover:bg-healthy-500/6 transition-all duration-700" />
 
         {/* Corner bracket decorations */}
         <div className="absolute top-4 left-4 w-6 h-6 pointer-events-none opacity-25">
@@ -133,7 +133,7 @@ export default function DeploymentList({
             <Server className="w-8 h-8 text-neutral-400 group-hover:text-healthy-400 transition-colors duration-500" />
           </div>
           <div className="absolute inset-0 rounded-full border border-healthy-500/10 scale-[1.3] group-hover:border-healthy-500/20 transition-all duration-500" />
-          <div className="absolute inset-0 rounded-full border border-healthy-500/[0.05] scale-[1.65] group-hover:border-healthy-500/10 transition-all duration-700" />
+          <div className="absolute inset-0 rounded-full border border-healthy-500/5 scale-[1.65] group-hover:border-healthy-500/10 transition-all duration-700" />
         </div>
 
         <h3 className="text-xl font-bold text-neutral-100 mb-2 relative z-10 tracking-widest uppercase">
@@ -263,10 +263,10 @@ export default function DeploymentList({
                   <motion.div
                     className={`absolute inset-0 ${
                       isBuilding
-                        ? "bg-linear-to-r from-warning-500/[0.06] to-transparent"
+                        ? "bg-linear-to-r from-warning-500/6 to-transparent"
                         : isError
-                          ? "bg-linear-to-r from-critical-500/[0.06] to-transparent"
-                          : "bg-linear-to-r from-healthy-500/[0.06] to-transparent"
+                          ? "bg-linear-to-r from-critical-500/6 to-transparent"
+                          : "bg-linear-to-r from-healthy-500/6 to-transparent"
                     }`}
                     variants={{
                       idle: { opacity: 0 },
@@ -308,7 +308,7 @@ export default function DeploymentList({
                         )}
 
                         {/* Repo name badge */}
-                        <span className="text-[9px] px-2 py-0.5 bg-neutral-800/60 border border-neutral-700/40 text-neutral-500 font-bold rounded tracking-widest uppercase">
+                        <span className="text-[9px] px-2 py-0.5 bg-neutral-800/60 border border-neutral-700/40 text-neutral-500 font-bold rounded tracking-widest uppercase group-hover:border-healthy-500/25 group-hover:text-healthy-400/70 transition-colors duration-300">
                           {dpl.repo?.name || "System"}
                         </span>
                       </div>

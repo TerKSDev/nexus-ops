@@ -1,14 +1,28 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { GitCommit, Check, X, GitBranch, Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 import FadeIn from "./FadeIn";
 import { formatDistanceToNow } from "date-fns";
 import { getMoreRepoLogs } from "@/actions/logs";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Log = any;
+type LogMetadata = {
+  branch?: string;
+  sha?: string;
+  author?: string;
+  time?: string;
+};
+
+type Log = {
+  id: string;
+  type: string;
+  message: string;
+  status: string;
+  createdAt: Date;
+  metadata: LogMetadata;
+  repoId: string;
+};
 
 function formatTime(timeStr?: string) {
   if (!timeStr) return "unknown";
@@ -36,39 +50,20 @@ export default function CommitList({
 
   // Get unique branches from commits
   const branches = Array.from(
-    new Set(
-      initialCommits.map((c) => (c.metadata as any)?.branch).filter(Boolean),
-    ),
+    new Set(initialCommits.map((c) => c.metadata?.branch).filter(Boolean)),
   );
   if (!branches.includes("main")) branches.push("main");
 
   useEffect(() => {
     // Reset commits and pagination when branch changes
     const branchCommits = initialCommits.filter(
-      (c) => ((c.metadata as any)?.branch || "main") === selectedBranch,
+      (c) => (c.metadata?.branch || "main") === selectedBranch,
     );
     setCommits(branchCommits);
     setHasMore(true);
   }, [selectedBranch, initialCommits]);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore && !loadingMore) {
-          loadMore();
-        }
-      },
-      { threshold: 0.1 },
-    );
-
-    if (observerRef.current) {
-      observer.observe(observerRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [hasMore, loadingMore, commits, selectedBranch]);
-
-  const loadMore = async () => {
+  const loadMore = useCallback(async () => {
     setLoadingMore(true);
     const { data, error } = await getMoreRepoLogs(
       repoId,
@@ -86,11 +81,11 @@ export default function CommitList({
       setCommits((prev) => {
         const uniqueCommitsMap = new Map();
         [...prev, ...data].forEach((commit) => {
-          const meta = commit.metadata as any;
+          const meta = commit.metadata as LogMetadata;
           if (meta?.sha && !uniqueCommitsMap.has(meta.sha)) {
-            uniqueCommitsMap.set(meta.sha, commit);
+            uniqueCommitsMap.set(meta.sha, commit as unknown as Log);
           } else if (!meta?.sha) {
-            uniqueCommitsMap.set(commit.id, commit);
+            uniqueCommitsMap.set(commit.id, commit as unknown as Log);
           }
         });
         return Array.from(uniqueCommitsMap.values());
@@ -99,7 +94,24 @@ export default function CommitList({
       setHasMore(false);
     }
     setLoadingMore(false);
-  };
+  }, [repoId, commits.length, selectedBranch]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loadingMore) {
+          loadMore();
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasMore, loadingMore, loadMore]);
 
   const displayCommits = commits;
 
@@ -182,7 +194,7 @@ export default function CommitList({
                   />
                   {/* Hover background gradient */}
                   <motion.div
-                    className="absolute inset-0 bg-linear-to-r from-healthy-500/[0.06] to-transparent"
+                    className="absolute inset-0 bg-linear-to-r from-healthy-500/6 to-transparent"
                     variants={{
                       idle: { opacity: 0 },
                       hover: { opacity: 1 },

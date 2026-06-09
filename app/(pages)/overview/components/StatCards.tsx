@@ -16,7 +16,7 @@ export default function StatCards({
       {/* Active Repositories */}
       <div className="bg-neutral-900/70 border border-neutral-700/40 shadow-[0_4px_24px_rgba(0,0,0,0.4)] rounded-lg p-6 flex items-center justify-between relative overflow-hidden group hover:border-healthy-500/20 transition-all duration-300">
         <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-healthy-500/50 via-healthy-500/20 to-transparent" />
-        <div className="absolute top-0 right-0 w-32 h-32 bg-healthy-500/[0.05] rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-healthy-500/[0.08] transition-all duration-500" />
+        <div className="absolute top-0 right-0 w-32 h-32 bg-healthy-500/5 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-healthy-500/8 transition-all duration-500" />
 
         <div className="relative z-10">
           <p className="text-[10px] font-medium text-neutral-500 mb-2 uppercase tracking-widest">
@@ -35,7 +35,7 @@ export default function StatCards({
       {/* Total Commits */}
       <div className="bg-neutral-900/70 border border-neutral-700/40 shadow-[0_4px_24px_rgba(0,0,0,0.4)] rounded-lg p-6 flex items-center justify-between relative overflow-hidden group hover:border-purple-500/20 transition-all duration-300">
         <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-purple-500/50 via-purple-500/20 to-transparent" />
-        <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/[0.05] rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-purple-500/[0.08] transition-all duration-500" />
+        <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-purple-500/8 transition-all duration-500" />
 
         <div className="relative z-10">
           <p className="text-[10px] font-medium text-neutral-500 mb-2 uppercase tracking-widest">
@@ -54,7 +54,7 @@ export default function StatCards({
       {/* Inactive Repos */}
       <div className="bg-neutral-900/70 border border-neutral-700/40 shadow-[0_4px_24px_rgba(0,0,0,0.4)] rounded-lg p-6 flex items-center justify-between relative overflow-hidden group hover:border-warning-500/20 transition-all duration-300">
         <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-warning-500/50 via-warning-500/20 to-transparent" />
-        <div className="absolute top-0 right-0 w-32 h-32 bg-warning-500/[0.05] rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-warning-500/[0.08] transition-all duration-500" />
+        <div className="absolute top-0 right-0 w-32 h-32 bg-warning-500/5 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-warning-500/8 transition-all duration-500" />
 
         <div className="relative z-10">
           <p className="text-[10px] font-medium text-neutral-500 mb-2 uppercase tracking-widest">

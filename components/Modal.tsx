@@ -11,9 +11,9 @@ export interface ModalProps {
 }
 
 const glowColors = {
-  default: "bg-healthy-500/[0.04]",
-  danger: "bg-critical-500/[0.04]",
-  warning: "bg-warning-500/[0.04]",
+  default: "bg-healthy-500/4",
+  danger: "bg-critical-500/4",
+  warning: "bg-warning-500/4",
 };
 
 const borderColors = {

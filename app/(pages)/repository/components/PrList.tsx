@@ -1,14 +1,31 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { GitPullRequest, GitMerge, X, Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 import FadeIn from "./FadeIn";
 import { formatDistanceToNow } from "date-fns";
 import { getMoreRepoLogs } from "@/actions/logs";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type PrLog = any;
+type PrMetadata = {
+  title?: string;
+  prNumber?: number;
+  author?: string;
+  time?: string;
+  description?: string;
+  state?: string;
+  merged?: boolean;
+};
+
+type PrLog = {
+  id: string;
+  type: string;
+  message: string;
+  status: string;
+  createdAt: Date;
+  metadata: PrMetadata;
+  repoId: string;
+};
 
 function formatTime(timeStr?: string) {
   if (!timeStr) return "unknown";
@@ -33,24 +50,7 @@ export default function PrList({
   const [hasMore, setHasMore] = useState(true);
   const observerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore && !loadingMore) {
-          loadMore();
-        }
-      },
-      { threshold: 0.1 },
-    );
-
-    if (observerRef.current) {
-      observer.observe(observerRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [hasMore, loadingMore, prs]);
-
-  const loadMore = async () => {
+  const loadMore = useCallback(async () => {
     setLoadingMore(true);
     const { data, error } = await getMoreRepoLogs(
       repoId,
@@ -67,11 +67,11 @@ export default function PrList({
       setPrs((prev) => {
         const uniquePrsMap = new Map();
         [...prev, ...data].forEach((pr) => {
-          const meta = pr.metadata as any;
+          const meta = pr.metadata as PrMetadata;
           if (meta?.prNumber && !uniquePrsMap.has(meta.prNumber)) {
-            uniquePrsMap.set(meta.prNumber, pr);
+            uniquePrsMap.set(meta.prNumber, pr as unknown as PrLog);
           } else if (!meta?.prNumber) {
-            uniquePrsMap.set(pr.id, pr);
+            uniquePrsMap.set(pr.id, pr as unknown as PrLog);
           }
         });
         return Array.from(uniquePrsMap.values());
@@ -80,7 +80,24 @@ export default function PrList({
       setHasMore(false);
     }
     setLoadingMore(false);
-  };
+  }, [repoId, prs.length]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loadingMore) {
+          loadMore();
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasMore, loadingMore, loadMore]);
 
   return (
     <div className="bg-neutral-900/70 border border-neutral-700/40 rounded-lg overflow-hidden flex flex-col shadow-[0_4px_24px_rgba(0,0,0,0.4)]">
@@ -136,7 +153,7 @@ export default function PrList({
                   />
                   {/* Hover background gradient */}
                   <motion.div
-                    className="absolute inset-0 bg-linear-to-r from-healthy-500/[0.06] to-transparent"
+                    className="absolute inset-0 bg-linear-to-r from-healthy-500/6 to-transparent"
                     variants={{
                       idle: { opacity: 0 },
                       hover: { opacity: 1 },

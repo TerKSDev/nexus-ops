@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Modal } from "./Modal";
 import { Input } from "./Input";
@@ -30,9 +30,15 @@ export function ConfirmModal({
 }: ConfirmModalProps) {
   const [inputVal, setInputVal] = useState("");
 
-  useEffect(() => {
-    if (!isOpen) setInputVal("");
-  }, [isOpen]);
+  const handleClose = () => {
+    setInputVal("");
+    onClose();
+  };
+
+  const handleConfirm = async () => {
+    await onConfirm();
+    setInputVal("");
+  };
 
   const isValid = requireInput ? inputVal === requireInput : true;
 
@@ -46,7 +52,12 @@ export function ConfirmModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={title} variant={variant}>
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      title={title}
+      variant={variant}
+    >
       <div className="flex flex-col gap-4">
         <div className="text-sm text-neutral-400 leading-relaxed">
           {description}
@@ -63,14 +74,14 @@ export function ConfirmModal({
 
         <div className="flex gap-3 mt-2">
           <button
-            onClick={onClose}
+            onClick={handleClose}
             disabled={isLoading}
             className="flex-1 py-2.5 text-center bg-neutral-800/70 text-neutral-300 cursor-pointer rounded-lg font-medium hover:bg-neutral-700/80 hover:text-neutral-100 transition-all duration-200 disabled:opacity-50 border border-neutral-700/50 text-sm"
           >
             {cancelText}
           </button>
           <button
-            onClick={onConfirm}
+            onClick={handleConfirm}
             disabled={!isValid || isLoading}
             className={`flex-1 py-2.5 text-center rounded-lg cursor-pointer font-bold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:from-neutral-700 disabled:to-neutral-700 disabled:shadow-none flex items-center justify-center gap-2 text-sm ${btnStyles[variant]}`}
           >
