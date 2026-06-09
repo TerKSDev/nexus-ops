@@ -112,12 +112,14 @@ export default async function RepositoryPage() {
                       )}
                     </div>
                     <div className="flex items-center gap-4">
-                      <Link
+                      <a
                         href={repo.url || ""}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="text-xs px-3 py-1.5 bg-neutral-900 rounded-md border border-neutral-800 transition-colors duration-300 hover:bg-neutral-800 text-neutral-400"
                       >
                         {repo.url}
-                      </Link>
+                      </a>
                       <RepoActions
                         repoId={repo.id}
                         repoName={repo.name}
@@ -164,15 +166,16 @@ export default async function RepositoryPage() {
                               meta.state === "closed" && !isMerged;
 
                             return (
-                              <FadeIn
-                                delay={prIdx * 0.05}
-                                direction="right"
+                              <a
+                                href={`${repo.url}/pull/${meta.prNumber}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 key={pr.id}
+                                className="block"
                               >
-                                <a
-                                  href={`${repo.url}/pull/${meta.prNumber}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
+                                <FadeIn
+                                  delay={prIdx * 0.05}
+                                  direction="right"
                                   className="group p-5 py-4 hover:bg-neutral-800 transition-all duration-300 cursor-pointer flex items-center justify-between gap-4"
                                 >
                                   <div className="flex flex-col gap-px overflow-hidden">
@@ -217,8 +220,8 @@ export default async function RepositoryPage() {
                                       <GitPullRequest className="w-3 h-3 drop-shadow-[0_0_3px_rgba(255,215,0,0.8)]" />
                                     )}
                                   </div>
-                                </a>
-                              </FadeIn>
+                                </FadeIn>
+                              </a>
                             );
                           })}
                         </div>

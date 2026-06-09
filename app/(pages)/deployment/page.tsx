@@ -140,15 +140,20 @@ export default async function VercelPage() {
                           </span>
                         </div>
 
-                        <a
-                          href={meta.url || "#"}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2.5 rounded-lg border border-transparent hover:border-neutral-700 hover:bg-neutral-800 text-neutral-500 hover:text-healthy-400 transition-all duration-300 shadow-sm cursor-pointer"
-                          onClick={(e) => !meta.url && e.preventDefault()}
-                        >
-                          <ArrowUpRight className="w-4 h-4" />
-                        </a>
+                        {meta.url ? (
+                          <a
+                            href={meta.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2.5 rounded-lg border border-transparent hover:border-neutral-700 hover:bg-neutral-800 text-neutral-500 hover:text-healthy-400 transition-all duration-300 shadow-sm cursor-pointer"
+                          >
+                            <ArrowUpRight className="w-4 h-4" />
+                          </a>
+                        ) : (
+                          <div className="p-2.5 rounded-lg border border-transparent text-neutral-600 shadow-sm cursor-not-allowed">
+                            <ArrowUpRight className="w-4 h-4" />
+                          </div>
+                        )}
                       </div>
                     </div>
                   </FadeIn>
