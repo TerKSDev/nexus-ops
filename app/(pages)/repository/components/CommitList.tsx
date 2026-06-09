@@ -168,7 +168,7 @@ export default function CommitList({
       {displayCommits.length > 0 ? (
         <div className="flex-1 divide-y divide-neutral-800/60 relative z-10 overflow-y-auto overflow-x-hidden max-h-[350px] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-neutral-900 [&::-webkit-scrollbar-thumb]:bg-neutral-700 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-neutral-600 transition-colors pr-1">
           {displayCommits.map((commit, commitIdx) => {
-            const meta = (commit.metadata || {}) as Record<string, unknown>;
+            const meta = (commit.metadata || {}) as LogMetadata;
 
             return (
               <FadeIn

@@ -52,7 +52,7 @@ export default function DeploymentList({
       setLoadingMore(true);
       const { data, error } = await getMoreDeployments(0, 20, selectedRepo);
       if (!error && data) {
-        setDeployments(data);
+        setDeployments(data as unknown as DeploymentLog[]);
         setHasMore(data.length === 20);
       } else {
         setDeployments([]);
@@ -81,7 +81,7 @@ export default function DeploymentList({
       if (data.length < 20) {
         setHasMore(false);
       }
-      setDeployments((prev) => [...prev, ...data]);
+      setDeployments((prev) => [...prev, ...(data as unknown as DeploymentLog[])]);
     } else {
       setHasMore(false);
     }

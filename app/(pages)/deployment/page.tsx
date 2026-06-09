@@ -65,7 +65,7 @@ export default async function VercelPage() {
       </div>
 
       <div className="flex flex-col gap-8 flex-1">
-        <DeploymentList initialDeployments={deployments} repos={repos} />
+        <DeploymentList initialDeployments={deployments as any} repos={repos} />
       </div>
     </div>
   );
