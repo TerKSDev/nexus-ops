@@ -103,8 +103,9 @@ export async function POST(req: Request) {
 
     // 處理 Git Push 事件
     if (eventType === "push") {
-      const commit = payload.commits?.[0]; // 抓取最新的一個 Commit
+      const commit = payload.head_commit; // 抓取最新的一個 Commit
       if (commit) {
+        const branch = payload.ref ? payload.ref.replace("refs/heads/", "") : "main";
         await prisma.logs.create({
           data: {
             repoId: dbRepo.id,
@@ -114,6 +115,7 @@ export async function POST(req: Request) {
               sha: commit.id.substring(0, 7),
               author: commit.author.name,
               time: commit.timestamp,
+              branch: branch,
             },
           },
         });

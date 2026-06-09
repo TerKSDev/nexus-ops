@@ -25,10 +25,16 @@ const borderColors = {
 const titleColors = {
   default: "text-neutral-50",
   danger: "text-critical-400",
-  warning: "text-warning-400",
+  warning: "text-warning-500",
 };
 
-export function Modal({ isOpen, onClose, title, children, variant = "default" }: ModalProps) {
+export function Modal({
+  isOpen,
+  onClose,
+  title,
+  children,
+  variant = "default",
+}: ModalProps) {
   useEffect(() => {
     if (isOpen) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "unset";
