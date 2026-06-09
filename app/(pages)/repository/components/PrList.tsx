@@ -7,7 +7,7 @@ import FadeIn from "./FadeIn";
 import { formatDistanceToNow } from "date-fns";
 import { getMoreRepoLogs } from "@/actions/logs";
 
-type PrMetadata = {
+export type PrMetadata = {
   title?: string;
   prNumber?: number;
   author?: string;
@@ -17,7 +17,7 @@ type PrMetadata = {
   merged?: boolean;
 };
 
-type PrLog = {
+export type PrLog = {
   id: string;
   type: string;
   message: string;

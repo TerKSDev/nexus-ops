@@ -3,8 +3,8 @@ import { GitMerge, ExternalLink } from "lucide-react";
 import AddRepoForm from "./components/AddRepoForm";
 import RepoActions from "./components/RepoActions";
 import FadeIn from "./components/FadeIn";
-import CommitList from "./components/CommitList";
-import PrList from "./components/PrList";
+import CommitList, { Log } from "./components/CommitList";
+import PrList, { PrLog } from "./components/PrList";
 
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
@@ -128,12 +128,12 @@ export default async function RepositoryPage() {
                   {/* Content Grid */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-100 max-h-120">
                     <CommitList
-                      initialCommits={rawCommits}
+                      initialCommits={rawCommits as unknown as Log[]}
                       repoUrl={repo.url || ""}
                       repoId={repo.id}
                     />
                     <PrList
-                      initialPrs={rawPrs}
+                      initialPrs={rawPrs as unknown as PrLog[]}
                       repoUrl={repo.url || ""}
                       repoId={repo.id}
                     />

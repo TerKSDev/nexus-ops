@@ -62,7 +62,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
-        token.isGuest = (user as Record<string, unknown>).isGuest;
+        token.isGuest = (user as unknown as Record<string, unknown>).isGuest;
       }
       if (account) {
         token.accessToken = account.access_token;
@@ -74,9 +74,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.id = token.id as string;
       }
       if (token?.isGuest !== undefined) {
-        (session.user as Record<string, unknown>).isGuest = token.isGuest;
+        (session.user as unknown as Record<string, unknown>).isGuest = token.isGuest;
       }
-      (session as Record<string, unknown>).accessToken = token.accessToken;
+      (session as unknown as Record<string, unknown>).accessToken = token.accessToken;
       return session;
     },
   },

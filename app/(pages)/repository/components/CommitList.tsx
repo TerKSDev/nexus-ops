@@ -7,14 +7,14 @@ import FadeIn from "./FadeIn";
 import { formatDistanceToNow } from "date-fns";
 import { getMoreRepoLogs } from "@/actions/logs";
 
-type LogMetadata = {
+export type LogMetadata = {
   branch?: string;
   sha?: string;
   author?: string;
   time?: string;
 };
 
-type Log = {
+export type Log = {
   id: string;
   type: string;
   message: string;
