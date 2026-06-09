@@ -11,6 +11,10 @@ import { formatDistanceToNow } from "date-fns";
 import { motion } from "motion/react";
 import FadeIn from "@/app/(pages)/repository/components/FadeIn";
 
+import { useState } from "react";
+import { redeployVercel } from "@/actions/vercel";
+import { useToast } from "@/components/ToastProvider";
+
 type LogWithRepo = {
   id: string;
   type: string;
@@ -24,9 +28,28 @@ type LogWithRepo = {
 
 export default function GlobalActivityFeed({
   recentLogs,
+  hasVercelToken,
 }: {
   recentLogs: LogWithRepo[];
+  hasVercelToken?: boolean;
 }) {
+  const { toast } = useToast();
+  const [loadingDeployId, setLoadingDeployId] = useState<string | null>(null);
+
+  const handleRedeploy = async (e: React.MouseEvent, log: LogWithRepo) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!log.repo?.name) return;
+    
+    setLoadingDeployId(log.id);
+    const result = await redeployVercel(log.repo.name);
+    if (result.error) {
+      toast(result.error, "error");
+    } else {
+      toast("Deploy triggered successfully!", "success");
+    }
+    setLoadingDeployId(null);
+  };
   return (
     <div className="bg-neutral-900/70 border border-neutral-700/40 shadow-[0_4px_24px_rgba(0,0,0,0.4)] rounded-lg overflow-hidden flex flex-col">
       {/* Panel Header — HSR style */}
@@ -132,6 +155,15 @@ export default function GlobalActivityFeed({
                           addSuffix: true,
                         })}
                       </span>
+                      {hasVercelToken && log.type === "DEPLOYMENT" && log.status === "CRITICAL" && (
+                        <button
+                          onClick={(e) => handleRedeploy(e, log)}
+                          disabled={loadingDeployId === log.id}
+                          className="ml-auto px-2 py-0.5 rounded border border-warning-500/30 text-warning-400 bg-warning-500/10 hover:bg-warning-500/20 text-[10px] uppercase font-bold tracking-widest transition-colors z-20 relative cursor-pointer disabled:opacity-50"
+                        >
+                          {loadingDeployId === log.id ? "Triggering..." : "Rerun Deploy"}
+                        </button>
+                      )}
                     </div>
                   </div>
 

@@ -9,6 +9,7 @@ import { useToast } from "@/components/ToastProvider";
 interface AdvancedSettingsProps {
   settings: {
     githubToken: string | null;
+    vercelToken?: string | null;
     dataRetentionDays: number;
   } | null;
 }
@@ -59,6 +60,31 @@ export default function AdvancedSettings({ settings }: AdvancedSettingsProps) {
           <p className="text-xs text-neutral-600 leading-relaxed">
             Required for active actions (like auto-merging PRs or syncing
             private repositories).
+          </p>
+        </div>
+
+        {/* Vercel API Token */}
+        <div className="flex flex-col gap-2">
+          <label className="text-[11px] font-medium text-neutral-400 uppercase tracking-widest flex items-center gap-2">
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="w-3.5 h-3.5"
+            >
+              <path d="M24 22.525H0l12-21.05 12 21.05z" />
+            </svg>
+            Vercel API Token
+          </label>
+          <Input
+            type="password"
+            name="vercelToken"
+            defaultValue={settings?.vercelToken || ""}
+            placeholder="enter-your-vercel-token"
+          />
+          <p className="text-xs text-neutral-600 leading-relaxed">
+            Required for triggering remote deployments directly from the dashboard.
+            <br />
+            (Requires Vercel Pro or team capabilities for API token access).
           </p>
         </div>
 

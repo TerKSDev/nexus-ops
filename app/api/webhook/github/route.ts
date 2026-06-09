@@ -145,6 +145,35 @@ export async function POST(req: Request) {
         },
       });
       await sendNotifications("PULL_REQUEST", "HEALTHY", `PR #${pr.number} ${payload.action}: ${pr.title} by ${pr.user.login}`);
+
+      // Auto-merge logic
+      if (payload.action === "opened" && dbRepo.autoMergePR) {
+        if (userSettings?.githubToken) {
+          const token = decrypt(userSettings.githubToken);
+          try {
+            const mergeRes = await fetch(`https://api.github.com/repos/${repoFullName}/pulls/${pr.number}/merge`, {
+              method: "PUT",
+              headers: {
+                "Authorization": `Bearer ${token}`,
+                "Accept": "application/vnd.github.v3+json",
+              },
+              body: JSON.stringify({
+                commit_title: `Auto-merge PR #${pr.number}: ${pr.title}`,
+                merge_method: "squash",
+              }),
+            });
+            if (mergeRes.ok) {
+              await sendNotifications("PULL_REQUEST", "HEALTHY", `PR #${pr.number} automatically merged by NexusOps.`);
+            } else {
+              const errorData = await mergeRes.json().catch(() => ({}));
+              console.error("Auto-merge failed:", errorData);
+              await sendNotifications("PULL_REQUEST", "WARNING", `Auto-merge for PR #${pr.number} failed.`);
+            }
+          } catch (err) {
+            console.error("Auto-merge fetch error:", err);
+          }
+        }
+      }
     }
     // 處理 Deployment Status 事件 (支援 Vercel, Render 等外部部署工具回報給 GitHub 的狀態)
     else if (eventType === "deployment_status") {

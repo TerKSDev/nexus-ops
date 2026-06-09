@@ -30,6 +30,7 @@ export default async function SettingsPage() {
         telegramBotToken: decrypt(user.settings.telegramBotToken || ""),
         telegramChatId: decrypt(user.settings.telegramChatId || ""),
         githubToken: decrypt(user.settings.githubToken || ""),
+        vercelToken: decrypt(user.settings.vercelToken || ""),
       }
     : null;
 

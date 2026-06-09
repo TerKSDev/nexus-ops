@@ -157,14 +157,17 @@ export async function updateAdvancedSettings(formData: FormData) {
 
     const rawGithubToken = formData.get("githubToken")?.toString() || null;
     const githubToken = rawGithubToken ? encrypt(rawGithubToken) : null;
+    const rawVercelToken = formData.get("vercelToken")?.toString() || null;
+    const vercelToken = rawVercelToken ? encrypt(rawVercelToken) : null;
     const dataRetentionDays = parseInt(formData.get("dataRetentionDays")?.toString() || "30", 10);
 
     await prisma.userSettings.upsert({
       where: { userId: session.user.id },
-      update: { githubToken, dataRetentionDays },
+      update: { githubToken, vercelToken, dataRetentionDays },
       create: {
         userId: session.user.id,
         githubToken,
+        vercelToken,
         dataRetentionDays,
       },
     });

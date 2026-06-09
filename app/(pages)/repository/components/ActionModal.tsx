@@ -14,6 +14,7 @@ import {
   X,
   Waypoints,
   Download,
+  GitMerge,
 } from "lucide-react";
 import { motion } from "motion/react";
 import {
@@ -21,6 +22,7 @@ import {
   regenerateSecret,
   clearRepoLogs,
   toggleRepoTracking,
+  toggleAutoMerge,
   updateRepo,
 } from "@/actions/repository";
 import { syncRepoHistory } from "@/actions/github";
@@ -31,6 +33,7 @@ interface ActionModalProps {
   repoName: string;
   url: string;
   isActive: boolean;
+  autoMergePR: boolean;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -82,6 +85,7 @@ export default function ActionModal({
   repoName,
   url,
   isActive,
+  autoMergePR,
   isOpen,
   onClose,
 }: ActionModalProps) {
@@ -92,6 +96,7 @@ export default function ActionModal({
   const [isClearing, setIsClearing] = useState(false);
 
   const [isToggling, setIsToggling] = useState(false);
+  const [isTogglingAutoMerge, setIsTogglingAutoMerge] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(repoName);
@@ -140,6 +145,12 @@ export default function ActionModal({
     setIsToggling(true);
     await toggleRepoTracking(repoId, isActive);
     setIsToggling(false);
+  };
+
+  const handleToggleAutoMerge = async () => {
+    setIsTogglingAutoMerge(true);
+    await toggleAutoMerge(repoId, autoMergePR);
+    setIsTogglingAutoMerge(false);
   };
 
   const handleSaveEdit = async () => {
@@ -371,6 +382,29 @@ export default function ActionModal({
             )}
           </button>
         </div>
+
+        {/* Auto-Merge PR */}
+        <button
+          onClick={handleToggleAutoMerge}
+          disabled={isTogglingAutoMerge}
+          className="w-full flex items-center justify-between gap-2 bg-neutral-800/70 hover:bg-neutral-700/80 text-neutral-200 py-2.5 px-4 rounded-lg font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 border border-neutral-700/50 hover:border-purple-500/40 text-sm"
+        >
+          <div className="flex items-center gap-2">
+            <GitMerge className="w-3.5 h-3.5 text-purple-400" />
+            <span>Auto-Merge Pull Requests</span>
+          </div>
+          <div
+            className={`w-8 h-4 rounded-full flex items-center transition-colors p-0.5 ${
+              autoMergePR ? "bg-purple-500/80" : "bg-neutral-700"
+            }`}
+          >
+            <div
+              className={`w-3 h-3 bg-white rounded-full transition-transform ${
+                autoMergePR ? "translate-x-4" : "translate-x-0"
+              }`}
+            />
+          </div>
+        </button>
 
         {/* Regenerate Secret */}
         <button

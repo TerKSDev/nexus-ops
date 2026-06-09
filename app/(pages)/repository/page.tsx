@@ -123,6 +123,7 @@ export default async function RepositoryPage() {
                         repoName={repo.name}
                         url={repo.url || ""}
                         isActive={repo.isActive}
+                        autoMergePR={repo.autoMergePR}
                       />
                     </div>
                   </div>

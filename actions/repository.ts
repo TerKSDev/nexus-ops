@@ -111,3 +111,17 @@ export async function updateRepo(repoId: string, name: string, url: string) {
     return { error: "Failed to update repository." };
   }
 }
+
+export async function toggleAutoMerge(repoId: string, currentStatus: boolean) {
+  try {
+    await prisma.githubRepo.update({
+      where: { id: repoId },
+      data: { autoMergePR: !currentStatus },
+    });
+    revalidatePath("/repository");
+    return { success: true };
+  } catch (error) {
+    console.log(error);
+    return { error: "Failed to toggle Auto Merge." };
+  }
+}

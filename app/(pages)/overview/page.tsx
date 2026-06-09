@@ -25,6 +25,7 @@ export default async function DashboardPage() {
     recentLogs,
     rawPRs,
     matrixLogs,
+    userSettings,
   ] = await Promise.all([
     prisma.githubRepo.count({
       where: { userId, isActive: true },
@@ -62,7 +63,13 @@ export default async function DashboardPage() {
       },
       select: { createdAt: true },
     }),
+    prisma.userSettings.findUnique({
+      where: { userId },
+      select: { vercelToken: true },
+    }),
   ]);
+
+  const hasVercelToken = !!userSettings?.vercelToken;
 
   const uniquePRsMap = new Map();
   for (const pr of rawPRs) {
@@ -133,7 +140,7 @@ export default async function DashboardPage() {
         {/* LEFT COLUMN (2/3) */}
         <div className="xl:col-span-2 flex flex-col gap-4">
           <ActivityMatrix matrixDays={matrixDays} />
-          <GlobalActivityFeed recentLogs={recentLogs} />
+          <GlobalActivityFeed recentLogs={recentLogs} hasVercelToken={hasVercelToken} />
         </div>
 
         {/* RIGHT COLUMN (1/3) */}

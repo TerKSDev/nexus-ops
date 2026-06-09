@@ -9,6 +9,7 @@ interface RepoActionsProps {
   repoName: string;
   url: string;
   isActive: boolean;
+  autoMergePR: boolean;
 }
 
 export default function RepoActions({
@@ -16,6 +17,7 @@ export default function RepoActions({
   repoName,
   url,
   isActive,
+  autoMergePR,
 }: RepoActionsProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -35,6 +37,7 @@ export default function RepoActions({
           repoName={repoName}
           url={url}
           isActive={isActive}
+          autoMergePR={autoMergePR}
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />
