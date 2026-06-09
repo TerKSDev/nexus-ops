@@ -352,7 +352,7 @@ export default function ActionModal({
               className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 ${
                 isConfirmingClear
                   ? "bg-warning-500/20 hover:bg-warning-500/25 text-warning-500 border border-warning-700"
-                  : "bg-neutral-950 border border-warning-700 text-warning-400 hover:bg-neutral-900"
+                  : "bg-neutral-950 border border-warning-700 text-warning-500 hover:bg-neutral-900"
               }`}
             >
               <Eraser className="w-4 h-4" />

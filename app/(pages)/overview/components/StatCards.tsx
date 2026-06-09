@@ -54,7 +54,7 @@ export default function StatCards({
           </p>
         </div>
         <div className="w-14 h-14 bg-warning-500/10 border border-warning-500/30 rounded-full flex items-center justify-center relative z-10 shadow-[inset_0_0_15px_rgba(255,215,0,0.2)] group-hover:scale-110 transition-transform">
-          <AlertCircle className="text-warning-400 w-7 h-7 drop-shadow-[0_0_5px_rgba(255,215,0,0.6)]" />
+          <AlertCircle className="text-warning-500 w-7 h-7 drop-shadow-[0_0_5px_rgba(255,215,0,0.6)]" />
         </div>
       </div>
     </div>

@@ -102,7 +102,7 @@ export default async function VercelPage() {
                           {isReady ? (
                             <CheckCircle2 className="w-6 h-6 text-healthy-400 drop-shadow-[0_0_5px_rgba(0,229,255,0.6)]" />
                           ) : isBuilding ? (
-                            <Clock className="w-6 h-6 text-warning-400 drop-shadow-[0_0_5px_rgba(255,215,0,0.6)] animate-pulse" />
+                            <Clock className="w-6 h-6 text-warning-500 drop-shadow-[0_0_5px_rgba(255,215,0,0.6)] animate-pulse" />
                           ) : (
                             <XCircle className="w-6 h-6 text-critical-500 drop-shadow-[0_0_5px_rgba(255,0,123,0.6)]" />
                           )}

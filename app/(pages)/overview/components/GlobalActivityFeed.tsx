@@ -1,4 +1,11 @@
-import { Activity, GitCommit, GitPullRequest, Check, AlertCircle, ChevronRight } from "lucide-react";
+import {
+  Activity,
+  GitCommit,
+  GitPullRequest,
+  Check,
+  AlertCircle,
+  ChevronRight,
+} from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import FadeIn from "@/app/(pages)/repository/components/FadeIn";
 
@@ -13,7 +20,11 @@ type LogWithRepo = {
   repo: { name: string; url: string | null } | null;
 };
 
-export default function GlobalActivityFeed({ recentLogs }: { recentLogs: LogWithRepo[] }) {
+export default function GlobalActivityFeed({
+  recentLogs,
+}: {
+  recentLogs: LogWithRepo[];
+}) {
   return (
     <div className="bg-neutral-900 border border-neutral-800 shadow-xl rounded-lg overflow-hidden relative flex flex-col">
       <div className="p-4 px-5 border-b border-neutral-800 flex items-center gap-3 relative z-10 bg-neutral-900">
@@ -43,11 +54,13 @@ export default function GlobalActivityFeed({ recentLogs }: { recentLogs: LogWith
 
             const isCommit = log.type === "COMMIT";
             const isPR = log.type === "PULL_REQUEST";
-            
+
             // Compute link
             let link = log.repo?.url || "#";
-            if (isCommit && meta.sha) link = `${log.repo?.url}/commit/${meta.sha}`;
-            if (isPR && meta.number) link = `${log.repo?.url}/pull/${meta.number}`;
+            if (isCommit && meta.sha)
+              link = `${log.repo?.url}/commit/${meta.sha}`;
+            if (isPR && meta.number)
+              link = `${log.repo?.url}/pull/${meta.number}`;
 
             return (
               <FadeIn delay={logIdx * 0.05} direction="left" key={log.id}>
@@ -59,8 +72,12 @@ export default function GlobalActivityFeed({ recentLogs }: { recentLogs: LogWith
                 >
                   <div className="flex flex-col gap-1.5 overflow-hidden">
                     <div className="flex items-center gap-2">
-                      {isCommit && <GitCommit className="w-4 h-4 text-neutral-500 group-hover:text-healthy-500 transition-colors" />}
-                      {isPR && <GitPullRequest className="w-4 h-4 text-neutral-500 group-hover:text-healthy-500 transition-colors" />}
+                      {isCommit && (
+                        <GitCommit className="w-4 h-4 text-neutral-500 group-hover:text-healthy-500 transition-colors" />
+                      )}
+                      {isPR && (
+                        <GitPullRequest className="w-4 h-4 text-neutral-500 group-hover:text-healthy-500 transition-colors" />
+                      )}
                       <span className="bg-neutral-800 px-1.5 py-0.5 rounded-md text-nowrap text-[10px] font-bold tracking-wider text-neutral-400 border border-neutral-700 uppercase group-hover:border-healthy-500 group-hover:text-healthy-400 transition-colors">
                         {log.repo?.name || "System"}
                       </span>
@@ -71,19 +88,27 @@ export default function GlobalActivityFeed({ recentLogs }: { recentLogs: LogWith
 
                     <div className="flex items-center gap-3 text-xs text-neutral-500 group-hover:text-neutral-300 transition-colors duration-300 font-mono mt-0.5 ml-6">
                       <span>
-                        {isCommit && meta.sha ? `#${meta.sha.substring(0, 7)}` : isPR && meta.number ? `#${meta.number}` : "SYS_LOG"}
+                        {isCommit && meta.sha
+                          ? `#${meta.sha.substring(0, 7)}`
+                          : isPR && meta.number
+                            ? `#${meta.number}`
+                            : "SYS_LOG"}
                       </span>
                       <span className="text-neutral-700">|</span>
                       <span>{meta.author || "system"}</span>
                       {meta.action && (
                         <>
                           <span className="text-neutral-700">|</span>
-                          <span className="text-neutral-400">{meta.action}</span>
+                          <span className="text-neutral-400">
+                            {meta.action}
+                          </span>
                         </>
                       )}
                       <span className="text-neutral-700">|</span>
                       <span>
-                        {formatDistanceToNow(new Date(log.createdAt), { addSuffix: true })}
+                        {formatDistanceToNow(new Date(log.createdAt), {
+                          addSuffix: true,
+                        })}
                       </span>
                     </div>
                   </div>
@@ -93,7 +118,7 @@ export default function GlobalActivityFeed({ recentLogs }: { recentLogs: LogWith
                       log.status === "HEALTHY"
                         ? "bg-healthy-500/10 border-healthy-700 text-healthy-400 shadow-[inset_0_0_10px_rgba(0,229,255,0.2)]"
                         : log.status === "WARNING"
-                          ? "bg-warning-500/10 border-warning-700 text-warning-400 shadow-[inset_0_0_10px_rgba(255,215,0,0.2)]"
+                          ? "bg-warning-500/10 border-warning-700 text-warning-500 shadow-[inset_0_0_10px_rgba(255,215,0,0.2)]"
                           : log.status === "CRITICAL"
                             ? "bg-critical-500/10 border-critical-700 text-critical-400 shadow-[inset_0_0_10px_rgba(255,0,123,0.2)]"
                             : "bg-neutral-800 border-neutral-700 text-neutral-400"
@@ -124,7 +149,8 @@ export default function GlobalActivityFeed({ recentLogs }: { recentLogs: LogWith
               No System Activity
             </p>
             <p className="text-neutral-400 text-xs max-w-100 leading-relaxed">
-              Your command center is waiting for signals. Connect a GitHub repository to start syncing events.
+              Your command center is waiting for signals. Connect a GitHub
+              repository to start syncing events.
             </p>
           </div>
         )}

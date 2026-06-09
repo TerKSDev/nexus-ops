@@ -64,12 +64,12 @@ export default function AccountSettings({ user }: AccountSettingsProps) {
       <div className="p-6">
         {user.isGuest && (
           <div className="mb-6 p-4 rounded-lg bg-warning-500/10 border border-warning-500/30 flex items-start gap-3 shadow-[inset_0_0_10px_rgba(255,215,0,0.1)]">
-            <ShieldAlert className="w-5 h-5 text-warning-400 mt-0.5" />
+            <ShieldAlert className="w-5 h-5 text-warning-500 mt-0.5" />
             <div>
               <p className="text-warning-100 font-medium text-sm">
                 Upgrade your account
               </p>
-              <p className="text-warning-400/80 text-xs mt-1 leading-relaxed">
+              <p className="text-warning-500/80 text-xs mt-1 leading-relaxed">
                 You are currently using a temporary guest account. To secure
                 your data and make it permanent, please provide a valid email
                 and password below.

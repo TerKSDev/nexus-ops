@@ -12,7 +12,11 @@ type LogWithRepo = {
   repo: { name: string; url: string | null } | null;
 };
 
-export default function PendingActions({ recentPRs }: { recentPRs: LogWithRepo[] }) {
+export default function PendingActions({
+  recentPRs,
+}: {
+  recentPRs: LogWithRepo[];
+}) {
   return (
     <div className="bg-neutral-900 border border-neutral-800 shadow-xl rounded-lg overflow-hidden flex flex-col">
       <div className="p-4 px-5 border-b border-neutral-800 flex items-center gap-3 bg-neutral-900">
@@ -23,7 +27,7 @@ export default function PendingActions({ recentPRs }: { recentPRs: LogWithRepo[]
           Pending Actions
         </h3>
       </div>
-      
+
       <div className="flex-1 divide-y divide-neutral-800 overflow-y-auto max-h-[600px] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-neutral-700 [&::-webkit-scrollbar-thumb]:rounded-full">
         {recentPRs.length > 0 ? (
           recentPRs.map((pr, idx) => {
@@ -35,12 +39,15 @@ export default function PendingActions({ recentPRs }: { recentPRs: LogWithRepo[]
                 action?: string;
                 description?: string;
               }) || {};
-            
-            const link = pr.repo?.url && meta.prNumber ? `${pr.repo.url}/pull/${meta.prNumber}` : "#";
+
+            const link =
+              pr.repo?.url && meta.prNumber
+                ? `${pr.repo.url}/pull/${meta.prNumber}`
+                : "#";
 
             return (
               <FadeIn delay={idx * 0.05} direction="left" key={pr.id}>
-                <a 
+                <a
                   href={link}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -51,7 +58,9 @@ export default function PendingActions({ recentPRs }: { recentPRs: LogWithRepo[]
                       {pr.repo?.name}
                     </span>
                     <span className="text-xs text-neutral-500 font-mono ml-auto whitespace-nowrap">
-                      {formatDistanceToNow(new Date(pr.createdAt), { addSuffix: true })}
+                      {formatDistanceToNow(new Date(pr.createdAt), {
+                        addSuffix: true,
+                      })}
                     </span>
                   </div>
                   <div className="flex flex-col">
@@ -65,15 +74,19 @@ export default function PendingActions({ recentPRs }: { recentPRs: LogWithRepo[]
                     )}
                   </div>
                   <div className="flex items-center justify-between mt-1">
-                    <span className="text-xs text-neutral-500 font-mono">#{meta.prNumber}</span>
+                    <span className="text-xs text-neutral-500 font-mono">
+                      #{meta.prNumber}
+                    </span>
                     <div className="flex items-center gap-1.5">
                       <span className="w-2 h-2 rounded-full bg-warning-400 animate-pulse shadow-[0_0_8px_rgba(255,215,0,0.6)]" />
-                      <span className="text-xs font-medium text-warning-400">Needs Review</span>
+                      <span className="text-xs font-medium text-warning-500">
+                        Needs Review
+                      </span>
                     </div>
                   </div>
                 </a>
               </FadeIn>
-            )
+            );
           })
         ) : (
           <div className="p-10 flex-1 flex flex-col items-center justify-center text-center relative z-10">
@@ -86,7 +99,8 @@ export default function PendingActions({ recentPRs }: { recentPRs: LogWithRepo[]
               No Pending Actions
             </p>
             <p className="text-neutral-400 text-xs max-w-100 leading-relaxed">
-              All caught up! There are no pending pull requests across your repositories.
+              All caught up! There are no pending pull requests across your
+              repositories.
             </p>
           </div>
         )}

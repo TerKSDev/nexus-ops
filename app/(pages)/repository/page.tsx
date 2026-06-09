@@ -1,5 +1,13 @@
 import prisma from "@/lib/prisma";
-import { GitCommit, GitPullRequest, GitMerge, Check, X, ExternalLink, ChevronRight } from "lucide-react";
+import {
+  GitCommit,
+  GitPullRequest,
+  GitMerge,
+  Check,
+  X,
+  ExternalLink,
+  ChevronRight,
+} from "lucide-react";
 import AddRepoForm from "./components/AddRepoForm";
 import RepoActions from "./components/RepoActions";
 import Link from "next/link";
@@ -56,10 +64,16 @@ export default async function RepositoryPage() {
           <>
             {repos.map((repo, repoIdx) => {
               // Sort logs descending by createdAt
-              const sortedLogs = [...repo.logs].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-              const rawCommits = sortedLogs.filter((log) => log.type === "COMMIT");
-              
-              const rawPrs = sortedLogs.filter((log) => log.type === "PULL_REQUEST");
+              const sortedLogs = [...repo.logs].sort(
+                (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+              );
+              const rawCommits = sortedLogs.filter(
+                (log) => log.type === "COMMIT",
+              );
+
+              const rawPrs = sortedLogs.filter(
+                (log) => log.type === "PULL_REQUEST",
+              );
               const uniquePrsMap = new Map();
               for (const pr of rawPrs) {
                 const meta = pr.metadata as { prNumber?: number };
@@ -114,7 +128,10 @@ export default async function RepositoryPage() {
 
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-100 max-h-120">
                     {/* Recent Commits */}
-                    <CommitList rawCommits={rawCommits} repoUrl={repo.url || ""} />
+                    <CommitList
+                      rawCommits={rawCommits}
+                      repoUrl={repo.url || ""}
+                    />
 
                     {/* Recent Pull Requests */}
                     <div className="bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden flex flex-col">
@@ -140,9 +157,10 @@ export default async function RepositoryPage() {
                               merged?: boolean;
                               action?: string;
                             };
-                            
+
                             const isMerged = meta.merged === true;
-                            const isClosed = meta.state === "closed" && !isMerged;
+                            const isClosed =
+                              meta.state === "closed" && !isMerged;
 
                             return (
                               <FadeIn
@@ -156,7 +174,7 @@ export default async function RepositoryPage() {
                                   rel="noopener noreferrer"
                                   className="group p-5 py-4 hover:bg-neutral-800 transition-all duration-300 cursor-pointer flex items-center justify-between gap-4"
                                 >
-                                  <div className="flex flex-col gap-1.5 overflow-hidden">
+                                  <div className="flex flex-col gap-px overflow-hidden">
                                     <p className="text-neutral-200 font-medium group-hover:text-healthy-500 transition-colors line-clamp-1">
                                       {pr.message}
                                     </p>
@@ -165,8 +183,10 @@ export default async function RepositoryPage() {
                                         {meta.description}
                                       </p>
                                     )}
-                                    <div className="flex items-center gap-3 text-xs text-neutral-500 group-hover:text-neutral-300 transition-colors duration-300 font-mono">
-                                      <span className="text-warning-400/80">
+                                    <div className="flex items-center gap-3 text-xs text-neutral-500 group-hover:text-neutral-300 transition-colors duration-300 font-mono mt-3">
+                                      <span
+                                        className={`${isMerged ? "text-purple-500" : "text-warning-500"}`}
+                                      >
                                         #{meta.prNumber}
                                       </span>
                                       <span className="text-neutral-700">
@@ -179,14 +199,22 @@ export default async function RepositoryPage() {
                                       <span>{formatTime(meta.time)}</span>
                                     </div>
                                   </div>
-                                  <div className={`p-2 rounded-full border shrink-0 ${
-                                    isMerged ? "bg-purple-500/10 border-purple-700 text-purple-400 shadow-[inset_0_0_10px_rgba(168,85,247,0.2)]" :
-                                    isClosed ? "bg-critical-500/10 border-critical-700 text-critical-400 shadow-[inset_0_0_10px_rgba(255,0,123,0.2)]" :
-                                    "bg-warning-500/10 border-warning-700 text-warning-400 shadow-[inset_0_0_10px_rgba(255,215,0,0.2)]"
-                                  }`}>
-                                    {isMerged ? <GitMerge className="w-3 h-3 drop-shadow-[0_0_3px_rgba(168,85,247,0.8)]" /> :
-                                     isClosed ? <X className="w-3 h-3 drop-shadow-[0_0_3px_rgba(255,0,123,0.8)]" /> :
-                                     <GitPullRequest className="w-3 h-3 drop-shadow-[0_0_3px_rgba(255,215,0,0.8)]" />}
+                                  <div
+                                    className={`p-2 rounded-full border shrink-0 ${
+                                      isMerged
+                                        ? "bg-purple-500/10 border-purple-700 text-purple-500 shadow-[inset_0_0_10px_rgba(168,85,247,0.2)]"
+                                        : isClosed
+                                          ? "bg-critical-500/10 border-critical-700 text-critical-400 shadow-[inset_0_0_10px_rgba(255,0,123,0.2)]"
+                                          : "bg-warning-500/10 border-warning-700 text-warning-500 shadow-[inset_0_0_10px_rgba(255,215,0,0.2)]"
+                                    }`}
+                                  >
+                                    {isMerged ? (
+                                      <GitMerge className="w-3 h-3 drop-shadow-[0_0_3px_rgba(168,85,247,0.8)]" />
+                                    ) : isClosed ? (
+                                      <X className="w-3 h-3 drop-shadow-[0_0_3px_rgba(255,0,123,0.8)]" />
+                                    ) : (
+                                      <GitPullRequest className="w-3 h-3 drop-shadow-[0_0_3px_rgba(255,215,0,0.8)]" />
+                                    )}
                                   </div>
                                 </a>
                               </FadeIn>
