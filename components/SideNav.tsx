@@ -21,7 +21,7 @@ export default function SideNav() {
   const pathname = usePathname();
   return (
     <aside className="flex h-screen bg-neutral-900 backdrop-blur-xl border-r border-neutral-700 w-64 flex-col gap-6 px-4 py-6 shadow-[4px_0_24px_rgba(0,0,0,0.2)] z-10 relative">
-      <div className="text-neutral-50 text-3xl font-extrabold flex justify-center w-full pb-6 border-b border-neutral-800/50">
+      <div className="text-neutral-50 text-3xl font-extrabold flex justify-center w-full pb-6 border-b border-neutral-800">
         <span className="text-transparent bg-clip-text bg-linear-to-r from-healthy-400 to-cyan-200 drop-shadow-[0_0_8px_rgba(0,229,255,0.5)]">
           Nexus
         </span>
@@ -39,7 +39,7 @@ export default function SideNav() {
               className={`flex items-center gap-4 px-4 py-3 rounded-lg font-medium transition-all duration-300 group border relative overflow-hidden ${
                 isActive
                   ? "bg-healthy-500/10 text-healthy-400 border-healthy-500/30 shadow-[0_0_15px_rgba(0,229,255,0.15)]"
-                  : "border-transparent text-neutral-300 hover:bg-neutral-800/40 hover:text-neutral-50 hover:border-neutral-700/50"
+                  : "border-transparent text-neutral-300 hover:bg-neutral-800 hover:text-neutral-50 hover:border-neutral-700"
               }`}
             >
               {isActive && (

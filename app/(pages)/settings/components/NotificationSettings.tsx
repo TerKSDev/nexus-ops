@@ -101,7 +101,7 @@ export default function NotificationSettings({ settings }: NotificationSettingsP
           <h4 className="text-sm font-bold text-neutral-400 uppercase tracking-wider mb-2">Integrations</h4>
           
           {/* Discord Integration */}
-          <div className="flex flex-col gap-3 p-4 rounded-lg bg-neutral-950/50 border border-neutral-800/60">
+          <div className="flex flex-col gap-3 p-4 rounded-lg bg-neutral-950/50 border border-neutral-800">
             <div className="flex items-center justify-between mb-1">
               <label className="text-sm font-bold text-neutral-200 flex items-center gap-2">
                 <MessageSquare className="w-4 h-4 text-[#5865F2]" />
@@ -139,7 +139,7 @@ export default function NotificationSettings({ settings }: NotificationSettingsP
           </div>
 
           {/* Telegram Integration */}
-          <div className="flex flex-col gap-3 p-4 rounded-lg bg-neutral-950/50 border border-neutral-800/60">
+          <div className="flex flex-col gap-3 p-4 rounded-lg bg-neutral-950/50 border border-neutral-800">
             <div className="flex items-center justify-between mb-1">
               <label className="text-sm font-bold text-neutral-200 flex items-center gap-2">
                 <Send className="w-4 h-4 text-[#0088cc]" />
