@@ -17,57 +17,53 @@ export default async function DashboardPage() {
   const userId = session.user.id;
   const fourteenDaysAgo = subDays(new Date(), 14);
 
-  // Bundle all database queries in a single Promise.all to prevent sequential waterfall
-  const [
-    activeReposCount,
-    totalCommitsCount,
-    inactiveReposCount,
-    recentLogs,
-    rawPRs,
-    matrixLogs,
-    userSettings,
-  ] = await Promise.all([
-    prisma.githubRepo.count({
-      where: { userId, isActive: true },
-    }),
-    prisma.logs.count({
-      where: { repo: { userId }, type: "COMMIT" },
-    }),
-    prisma.githubRepo.count({
-      where: { userId, isActive: false },
-    }),
-    prisma.logs.findMany({
-      where: { repo: { userId } },
-      orderBy: { createdAt: "desc" },
-      take: 100, // Fetch more to sort accurately
-      include: { repo: true },
-    }).then(logs => logs.sort((a, b) => {
-      const timeA = new Date((a.metadata as any)?.time || a.createdAt).getTime();
-      const timeB = new Date((b.metadata as any)?.time || b.createdAt).getTime();
-      return timeB - timeA;
-    }).slice(0, 20)),
-    prisma.logs.findMany({
-      where: { repo: { userId }, type: "PULL_REQUEST" },
-      orderBy: { createdAt: "desc" },
-      take: 100, // Fetch more to sort accurately
-      include: { repo: true },
-    }).then(logs => logs.sort((a, b) => {
-      const timeA = new Date((a.metadata as any)?.time || a.createdAt).getTime();
-      const timeB = new Date((b.metadata as any)?.time || b.createdAt).getTime();
-      return timeB - timeA;
-    })),
-    prisma.logs.findMany({
-      where: {
-        repo: { userId },
-        createdAt: { gte: fourteenDaysAgo },
-      },
-      select: { createdAt: true },
-    }),
-    prisma.userSettings.findUnique({
-      where: { userId },
-      select: { vercelToken: true },
-    }),
-  ]);
+  // Execute queries sequentially to prevent connection pool exhaustion (Supabase pool limit)
+  const activeReposCount = await prisma.githubRepo.count({
+    where: { userId, isActive: true },
+  });
+  const totalCommitsCount = await prisma.logs.count({
+    where: { repo: { userId }, type: "COMMIT" },
+  });
+  const inactiveReposCount = await prisma.githubRepo.count({
+    where: { userId, isActive: false },
+  });
+
+  const rawRecentLogs = await prisma.logs.findMany({
+    where: { repo: { userId } },
+    orderBy: { createdAt: "desc" },
+    take: 100, // Fetch more to sort accurately
+    include: { repo: true },
+  });
+  const recentLogs = rawRecentLogs.sort((a, b) => {
+    const timeA = new Date((a.metadata as Record<string, unknown>)?.time as string || a.createdAt).getTime();
+    const timeB = new Date((b.metadata as Record<string, unknown>)?.time as string || b.createdAt).getTime();
+    return timeB - timeA;
+  }).slice(0, 20);
+
+  const rawPRsData = await prisma.logs.findMany({
+    where: { repo: { userId }, type: "PULL_REQUEST" },
+    orderBy: { createdAt: "desc" },
+    take: 100, // Fetch more to sort accurately
+    include: { repo: true },
+  });
+  const rawPRs = rawPRsData.sort((a, b) => {
+    const timeA = new Date((a.metadata as Record<string, unknown>)?.time as string || a.createdAt).getTime();
+    const timeB = new Date((b.metadata as Record<string, unknown>)?.time as string || b.createdAt).getTime();
+    return timeB - timeA;
+  });
+
+  const matrixLogs = await prisma.logs.findMany({
+    where: {
+      repo: { userId },
+      createdAt: { gte: fourteenDaysAgo },
+    },
+    select: { createdAt: true },
+  });
+
+  const userSettings = await prisma.userSettings.findUnique({
+    where: { userId },
+    select: { vercelToken: true },
+  });
 
   const hasVercelToken = !!userSettings?.vercelToken;
 

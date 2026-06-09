@@ -9,7 +9,7 @@ type SearchItem = {
   id: string;
   title: string;
   subtitle: string;
-  icon: any;
+  icon: React.ElementType;
   href?: string;
   action?: () => void;
   type: "PAGE" | "ACTION";
@@ -40,6 +40,7 @@ export default function GlobalSearchModal() {
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 50);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuery("");
       setSelectedIndex(0);
     }
@@ -60,6 +61,7 @@ export default function GlobalSearchModal() {
   );
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedIndex(0);
   }, [query]);
 

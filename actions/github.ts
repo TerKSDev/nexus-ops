@@ -174,7 +174,7 @@ export async function mergePullRequest(repoId: string, prNumber: number) {
     });
 
     if (existingLog) {
-      const currentMeta = existingLog.metadata as any;
+      const currentMeta = existingLog.metadata as Record<string, unknown>;
       await prisma.logs.update({
         where: { id: existingLog.id },
         data: {

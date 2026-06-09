@@ -114,7 +114,7 @@ export default function ActionModal({
     setIsSyncing(true);
     setSyncResult(null);
     const result = await syncRepoHistory(repoId);
-    setSyncResult(result as any);
+    setSyncResult(result as { success?: boolean; count?: number; error?: string });
     setIsSyncing(false);
   };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   Globe,
   CheckCircle2,
@@ -22,7 +22,7 @@ type DeploymentLog = {
   message: string;
   status: string;
   createdAt: Date;
-  metadata: any;
+  metadata: Record<string, unknown>;
   repo: { name: string; url: string | null } | null;
   repoId: string | null;
 };
@@ -62,12 +62,31 @@ export default function DeploymentList({
     };
 
     if (selectedRepo === "all") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDeployments(initialDeployments);
       setHasMore(initialDeployments.length === 20);
     } else {
       fetchFiltered();
     }
   }, [selectedRepo, initialDeployments]);
+
+  const loadMore = useCallback(async () => {
+    setLoadingMore(true);
+    const { data, error } = await getMoreDeployments(
+      deployments.length,
+      20,
+      selectedRepo,
+    );
+    if (!error && data) {
+      if (data.length < 20) {
+        setHasMore(false);
+      }
+      setDeployments((prev) => [...prev, ...data]);
+    } else {
+      setHasMore(false);
+    }
+    setLoadingMore(false);
+  }, [deployments.length, selectedRepo]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -84,25 +103,7 @@ export default function DeploymentList({
     }
 
     return () => observer.disconnect();
-  }, [hasMore, loadingMore, deployments, selectedRepo]);
-
-  const loadMore = async () => {
-    setLoadingMore(true);
-    const { data, error } = await getMoreDeployments(
-      deployments.length,
-      20,
-      selectedRepo,
-    );
-    if (!error && data) {
-      if (data.length < 20) {
-        setHasMore(false);
-      }
-      setDeployments((prev) => [...prev, ...data]);
-    } else {
-      setHasMore(false);
-    }
-    setLoadingMore(false);
-  };
+  }, [hasMore, loadingMore, loadMore]);
 
   if (deployments.length === 0 && selectedRepo === "all") {
     return (

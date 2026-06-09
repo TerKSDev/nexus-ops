@@ -62,8 +62,8 @@ export default async function RepositoryPage() {
           <>
             {repos.map((repo, repoIdx) => {
               const sortedLogs = [...repo.logs].sort((a, b) => {
-                const timeA = new Date((a.metadata as any)?.time || a.createdAt).getTime();
-                const timeB = new Date((b.metadata as any)?.time || b.createdAt).getTime();
+                const timeA = new Date((a.metadata as Record<string, unknown>)?.time as string || a.createdAt).getTime();
+                const timeB = new Date((b.metadata as Record<string, unknown>)?.time as string || b.createdAt).getTime();
                 return timeB - timeA;
               });
               const rawCommits = sortedLogs.filter(
