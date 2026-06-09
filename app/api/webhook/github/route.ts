@@ -68,26 +68,36 @@ export async function POST(req: Request) {
       const title = `${emoji} Nexus Ops: [${repoFullName}]`;
       const body = `**Event:** ${type}\n**Status:** ${status}\n**Details:** ${message}`;
 
+      const promises = [];
+
       // Discord
       if (discordWebhook) {
-        fetch(discordWebhook, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ content: `${title}\n${body}` }),
-        }).catch((err) => console.error("Discord notification failed", err));
+        promises.push(
+          fetch(discordWebhook, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: `${title}\n${body}` }),
+          }).catch((err) => console.error("Discord notification failed", err))
+        );
       }
 
       // Telegram
       if (telegramBotToken && telegramChatId) {
         const tgUrl = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
-        fetch(tgUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_id: telegramChatId,
-            text: `${title}\n${body}`,
-          }),
-        }).catch((err) => console.error("Telegram notification failed", err));
+        promises.push(
+          fetch(tgUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              chat_id: telegramChatId,
+              text: `${title}\n${body}`,
+            }),
+          }).catch((err) => console.error("Telegram notification failed", err))
+        );
+      }
+
+      if (promises.length > 0) {
+        await Promise.allSettled(promises);
       }
     };
 
@@ -122,10 +132,14 @@ export async function POST(req: Request) {
             prNumber: pr.number,
             author: pr.user.login,
             time: pr.created_at,
+            description: pr.body,
+            state: pr.state,
+            merged: pr.merged,
+            action: payload.action,
           },
         },
       });
-      await sendNotifications("PULL_REQUEST", "HEALTHY", `PR #${pr.number}: ${pr.title} by ${pr.user.login}`);
+      await sendNotifications("PULL_REQUEST", "HEALTHY", `PR #${pr.number} ${payload.action}: ${pr.title} by ${pr.user.login}`);
     }
     // 處理 Deployment Status 事件 (支援 Vercel, Render 等外部部署工具回報給 GitHub 的狀態)
     else if (eventType === "deployment_status") {
