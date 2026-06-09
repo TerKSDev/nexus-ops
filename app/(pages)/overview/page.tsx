@@ -36,12 +36,28 @@ export default async function DashboardPage() {
   });
 
   // 3. Fetch Active PRs (Recent PR logs)
-  const recentPRs = await prisma.logs.findMany({
+  const rawPRs = await prisma.logs.findMany({
     where: { repo: { userId: session.user.id }, type: "PULL_REQUEST" },
     orderBy: { createdAt: "desc" },
-    take: 6,
+    take: 50,
     include: { repo: true },
   });
+
+  const uniquePRsMap = new Map();
+  for (const pr of rawPRs) {
+    const meta = pr.metadata as { prNumber?: number; state?: string; merged?: boolean };
+    if (meta?.prNumber && !uniquePRsMap.has(meta.prNumber)) {
+      uniquePRsMap.set(meta.prNumber, pr);
+    }
+  }
+  const recentPRs = Array.from(uniquePRsMap.values())
+    .filter((pr) => {
+      const meta = pr.metadata as { state?: string; merged?: boolean };
+      const isMerged = meta.merged === true;
+      const isClosed = meta.state === "closed" && !isMerged;
+      return meta.state === "open" || (!isMerged && !isClosed);
+    })
+    .slice(0, 6);
 
   // 4. Fetch Logs for Activity Matrix (last 14 days)
   const fourteenDaysAgo = subDays(new Date(), 14);

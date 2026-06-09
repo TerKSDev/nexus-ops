@@ -53,7 +53,7 @@ export default function AddRepoForm() {
           <button
             type="submit"
             disabled={isPending}
-            className="bg-healthy-500 cursor-pointer text-neutral-950 px-6 py-2.5 rounded-lg font-bold hover:bg-healthy-400 hover:shadow-[0_0_15px_rgba(0,229,255,0.4)] transition-all"
+            className="bg-healthy-500 cursor-pointer text-neutral-950 px-6 py-2.5 rounded-lg font-bold hover:bg-healthy-400 hover:shadow-[0_0_15px_rgba(0,229,255,0.4)] transition-all text-nowrap"
           >
             {isPending ? "Adding..." : "Add Repo"}
           </button>

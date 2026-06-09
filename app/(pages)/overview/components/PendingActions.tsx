@@ -33,6 +33,7 @@ export default function PendingActions({ recentPRs }: { recentPRs: LogWithRepo[]
                 title?: string;
                 number?: number;
                 action?: string;
+                description?: string;
               }) || {};
             
             const link = pr.repo?.url && meta.number ? `${pr.repo.url}/pull/${meta.number}` : "#";
@@ -53,9 +54,16 @@ export default function PendingActions({ recentPRs }: { recentPRs: LogWithRepo[]
                       {formatDistanceToNow(new Date(pr.createdAt), { addSuffix: true })}
                     </span>
                   </div>
-                  <p className="text-sm font-medium text-neutral-200 group-hover:text-healthy-500 transition-colors line-clamp-2">
-                    {meta.title || pr.message}
-                  </p>
+                  <div className="flex flex-col">
+                    <p className="text-sm font-medium text-neutral-200 group-hover:text-healthy-500 transition-colors line-clamp-2">
+                      {meta.title || pr.message}
+                    </p>
+                    {meta.description && (
+                      <p className="text-neutral-400 text-xs mt-1.5 line-clamp-2">
+                        {meta.description}
+                      </p>
+                    )}
+                  </div>
                   <div className="flex items-center justify-between mt-1">
                     <span className="text-xs text-neutral-500 font-mono">#{meta.number}</span>
                     <div className="flex items-center gap-1.5">

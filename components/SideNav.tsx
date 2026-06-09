@@ -1,19 +1,12 @@
 "use client";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import {
-  LayoutDashboard,
-  GitMerge,
-  Triangle,
-  BarChart3,
-  Settings,
-} from "lucide-react";
+import { LayoutDashboard, GitMerge, Triangle, Settings } from "lucide-react";
 
 export const navLinks = [
   { href: "/overview", label: "Overview", icon: LayoutDashboard },
   { href: "/repository", label: "Repository", icon: GitMerge },
   { href: "/deployment", label: "Deployment", icon: Triangle },
-  { href: "#", label: "Reports", icon: BarChart3 },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
