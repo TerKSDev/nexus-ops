@@ -31,12 +31,12 @@ export default function PendingActions({ recentPRs }: { recentPRs: LogWithRepo[]
               (pr.metadata as {
                 author?: string;
                 title?: string;
-                number?: number;
+                prNumber?: number;
                 action?: string;
                 description?: string;
               }) || {};
             
-            const link = pr.repo?.url && meta.number ? `${pr.repo.url}/pull/${meta.number}` : "#";
+            const link = pr.repo?.url && meta.prNumber ? `${pr.repo.url}/pull/${meta.prNumber}` : "#";
 
             return (
               <FadeIn delay={idx * 0.05} direction="left" key={pr.id}>
@@ -65,7 +65,7 @@ export default function PendingActions({ recentPRs }: { recentPRs: LogWithRepo[]
                     )}
                   </div>
                   <div className="flex items-center justify-between mt-1">
-                    <span className="text-xs text-neutral-500 font-mono">#{meta.number}</span>
+                    <span className="text-xs text-neutral-500 font-mono">#{meta.prNumber}</span>
                     <div className="flex items-center gap-1.5">
                       <span className="w-2 h-2 rounded-full bg-warning-400 animate-pulse shadow-[0_0_8px_rgba(255,215,0,0.6)]" />
                       <span className="text-xs font-medium text-warning-400">Needs Review</span>

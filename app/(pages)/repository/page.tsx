@@ -4,6 +4,7 @@ import AddRepoForm from "./components/AddRepoForm";
 import RepoActions from "./components/RepoActions";
 import Link from "next/link";
 import FadeIn from "./components/FadeIn";
+import CommitList from "./components/CommitList";
 import { formatDistanceToNow } from "date-fns";
 
 import { auth } from "@/lib/auth";
@@ -56,7 +57,7 @@ export default async function RepositoryPage() {
             {repos.map((repo, repoIdx) => {
               // Sort logs descending by createdAt
               const sortedLogs = [...repo.logs].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-              const commits = sortedLogs.filter((log) => log.type === "COMMIT").slice(0, 5);
+              const rawCommits = sortedLogs.filter((log) => log.type === "COMMIT");
               
               const rawPrs = sortedLogs.filter((log) => log.type === "PULL_REQUEST");
               const uniquePrsMap = new Map();
@@ -113,90 +114,7 @@ export default async function RepositoryPage() {
 
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-100 max-h-120">
                     {/* Recent Commits */}
-                    <div className="bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden flex flex-col">
-                      <div className="p-4 px-5 border-b border-neutral-800 flex items-center gap-3 bg-neutral-900 relative z-10">
-                        <div className="p-1.5 bg-neutral-800 rounded-lg border border-neutral-700">
-                          <GitCommit className="w-4 h-4 text-neutral-300" />
-                        </div>
-                        <h3 className="text-base font-semibold text-neutral-50 tracking-wide">
-                          Recent Commits
-                        </h3>
-                      </div>
-
-                      {commits.length > 0 ? (
-                        <div className="flex-1 divide-y divide-neutral-800 relative z-10 overflow-y-auto overflow-x-hidden max-h-[350px] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-neutral-900 [&::-webkit-scrollbar-thumb]:bg-neutral-700 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-neutral-600 transition-colors pr-1">
-                          {commits.map((commit, commitIdx) => {
-                            const meta =
-                              (commit.metadata as {
-                                author?: string;
-                                sha?: string;
-                                time?: string;
-                              }) || {};
-
-                            return (
-                              <FadeIn
-                                delay={commitIdx * 0.05}
-                                direction="left"
-                                key={commit.id}
-                              >
-                                <a
-                                  href={`${repo.url}/commit/${meta.sha || commit.id.substring(0, 7)}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="group p-5 py-4 hover:bg-neutral-800 transition-all duration-300 cursor-pointer flex items-center justify-between gap-4"
-                                >
-                                  <div className="flex flex-col gap-1.5 overflow-hidden">
-                                    <p className="text-neutral-200 font-medium group-hover:text-healthy-500 transition-colors line-clamp-1">
-                                      {commit.message}
-                                    </p>
-                                    <div className="flex items-center gap-3 text-xs text-neutral-500 group-hover:text-neutral-300 transition-colors duration-300 font-mono">
-                                      <span>
-                                        #{meta.sha || commit.id.substring(0, 7)}
-                                      </span>
-                                      <span className="text-neutral-700">
-                                        |
-                                      </span>
-                                      <span>{meta.author || "unknown"}</span>
-                                      <span className="text-neutral-700">
-                                        |
-                                      </span>
-                                      <span>{formatTime(meta.time)}</span>
-                                    </div>
-                                  </div>
-                                  <div
-                                    className={`p-2 rounded-full border shrink-0 ${
-                                      commit.status === "HEALTHY"
-                                        ? "bg-healthy-500/10 border-healthy-700 text-healthy-400 shadow-[inset_0_0_10px_rgba(0,229,255,0.2)]"
-                                        : "bg-critical-500/10 border-critical-700 text-critical-400 shadow-[inset_0_0_10px_rgba(255,0,123,0.2)]"
-                                    }`}
-                                  >
-                                    {commit.status === "HEALTHY" ? (
-                                      <Check className="w-3 h-3 drop-shadow-[0_0_3px_rgba(0,229,255,0.8)]" />
-                                    ) : (
-                                      <X className="w-3 h-3 drop-shadow-[0_0_3px_rgba(255,0,123,0.8)]" />
-                                    )}
-                                  </div>
-                                </a>
-                              </FadeIn>
-                            );
-                          })}
-                        </div>
-                      ) : (
-                        <div className="p-10 flex-1 flex flex-col items-center justify-center text-center relative z-10">
-                          <div className="w-15 h-15 bg-neutral-800 border border-neutral-700 rounded-lg rotate-45 flex items-center justify-center mb-10 shadow-inner">
-                            <div className="-rotate-45">
-                              <GitCommit className="w-6 h-6 text-neutral-300" />
-                            </div>
-                          </div>
-                          <p className="text-neutral-100 font-medium mb-1.5 uppercase tracking-wide text-lg">
-                            No Commits Found
-                          </p>
-                          <p className="text-neutral-400 text-xs max-w-100 leading-relaxed">
-                            There are no commits found in this repository.
-                          </p>
-                        </div>
-                      )}
-                    </div>
+                    <CommitList rawCommits={rawCommits} repoUrl={repo.url || ""} />
 
                     {/* Recent Pull Requests */}
                     <div className="bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden flex flex-col">
