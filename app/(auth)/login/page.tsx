@@ -5,6 +5,7 @@ import { Play, KeyRound, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { registerUser } from "@/actions/auth";
+import { Input } from "@/components/Input";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -41,8 +42,9 @@ export default function LoginPage() {
           await signIn("credentials", { email, password, callbackUrl: "/overview" });
         }
       }
-    } catch (err) {
-      setErrorMsg("An unexpected error occurred.");
+    } catch (error) {
+      console.log(error);
+      setErrorMsg("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -75,10 +77,9 @@ export default function LoginPage() {
             <label className="text-xs font-medium text-neutral-200 px-px">
               Email Address
             </label>
-            <input
+            <Input
               type="email"
               placeholder="you@example.com"
-              className="bg-neutral-950 hover:bg-neutral-900 focus:bg-neutral-900 w-full p-4 py-3 rounded-lg border border-neutral-800 outline-none hover:border-neutral-700 focus:border-healthy-500 transition-all font-mono text-sm text-neutral-300"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -87,10 +88,9 @@ export default function LoginPage() {
             <label className="text-xs font-medium text-neutral-200 px-px">
               Password
             </label>
-            <input
+            <Input
               type="password"
               placeholder="••••••••"
-              className="bg-neutral-950 hover:bg-neutral-900 focus:bg-neutral-900 w-full p-4 py-3 rounded-lg border border-neutral-800 outline-none hover:border-neutral-700 focus:border-healthy-500 transition-all font-mono text-sm text-neutral-300"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

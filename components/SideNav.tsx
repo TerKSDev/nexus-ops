@@ -14,7 +14,7 @@ export const navLinks = [
   { href: "/repository", label: "Repository", icon: GitMerge },
   { href: "/deployment", label: "Deployment", icon: Triangle },
   { href: "#", label: "Reports", icon: BarChart3 },
-  { href: "#", label: "Settings", icon: Settings },
+  { href: "/settings", label: "Settings", icon: Settings },
 ];
 
 export default function SideNav() {

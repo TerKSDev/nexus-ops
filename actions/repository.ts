@@ -52,6 +52,7 @@ export async function deleteRepo(repoId: string) {
     revalidatePath("/repository");
     return { success: true };
   } catch (error) {
+    console.log(error);
     return { error: "Failed to delete repository." };
   }
 }
@@ -66,6 +67,7 @@ export async function regenerateSecret(repoId: string) {
     revalidatePath("/repository");
     return { success: true, secret: webhookSecret };
   } catch (error) {
+    console.log(error);
     return { error: "Failed to regenerate secret." };
   }
 }
@@ -76,6 +78,7 @@ export async function clearRepoLogs(repoId: string) {
     revalidatePath("/repository");
     return { success: true };
   } catch (error) {
+    console.log(error);
     return { error: "Failed to clear logs." };
   }
 }
@@ -89,6 +92,7 @@ export async function toggleRepoTracking(repoId: string, currentStatus: boolean)
     revalidatePath("/repository");
     return { success: true };
   } catch (error) {
+    console.log(error);
     return { error: "Failed to toggle tracking status." };
   }
 }
@@ -103,6 +107,7 @@ export async function updateRepo(repoId: string, name: string, url: string) {
     revalidatePath("/repository");
     return { success: true };
   } catch (error) {
+    console.log(error);
     return { error: "Failed to update repository." };
   }
 }

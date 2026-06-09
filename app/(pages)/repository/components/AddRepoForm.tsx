@@ -2,6 +2,7 @@
 import { useActionState, useState } from "react";
 import { addRepo } from "@/actions/repository";
 import SecretModal from "./SecretModal";
+import { Input } from "@/components/Input";
 
 export default function AddRepoForm() {
   const [state, formAction, isPending] = useActionState(addRepo, null);
@@ -42,8 +43,8 @@ export default function AddRepoForm() {
     <>
       <form action={formAction} className="flex flex-col justify-center gap-1">
         <div className="flex items-center gap-4">
-          <input
-            className="w-82 bg-neutral-900 px-4 py-3 rounded-lg border border-neutral-800 focus:border-healthy-500 outline-none text-neutral-50 placeholder-neutral-400 transition-all hover:bg-neutral-800 font-mono text-sm"
+          <Input
+            className="w-82"
             placeholder="https://github.com/username/repo"
             name="url"
             type="text"

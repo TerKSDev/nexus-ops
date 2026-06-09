@@ -21,6 +21,7 @@ import {
   toggleRepoTracking,
   updateRepo,
 } from "@/actions/repository";
+import { Input } from "@/components/Input";
 
 interface ActionModalProps {
   repoId: string;
@@ -243,11 +244,10 @@ export default function ActionModal({
                 <label className="text-xs font-medium text-neutral-200 px-px">
                   Display Name
                 </label>
-                <input
+                <Input
                   type="text"
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="bg-neutral-950 hover:bg-neutral-900 focus:bg-neutral-900 group p-4 py-3 rounded-lg border border-neutral-800 outline-none hover:border-neutral-700 focus:border-healthy-500 transition-all relative z-10 font-mono text-sm text-neutral-300 flex justify-between items-center gap-4"
                   placeholder="NexusOps"
                 />
               </div>
@@ -256,11 +256,10 @@ export default function ActionModal({
                 <label className="text-xs font-medium text-neutral-200 px-px">
                   GitHub URL
                 </label>
-                <input
+                <Input
                   type="url"
                   value={editUrl}
                   onChange={(e) => setEditUrl(e.target.value)}
-                  className="bg-neutral-950 hover:bg-neutral-900 focus:bg-neutral-900 group p-4 py-3 rounded-lg border border-neutral-800 outline-none hover:border-neutral-700 focus:border-healthy-500 transition-all relative z-10 font-mono text-sm text-neutral-300 flex justify-between items-center gap-4"
                   placeholder="https://github.com/username/repo"
                 />
               </div>

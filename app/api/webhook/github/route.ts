@@ -71,6 +71,37 @@ export async function POST(req: Request) {
         },
       });
     }
+    // 處理 Deployment Status 事件 (支援 Vercel, Render 等外部部署工具回報給 GitHub 的狀態)
+    else if (eventType === "deployment_status") {
+      const deployStatus = payload.deployment_status;
+      const deploy = payload.deployment;
+      
+      // 狀態轉換
+      let mappedStatus: "HEALTHY" | "WARNING" | "CRITICAL" = "HEALTHY";
+      if (["pending", "in_progress", "queued"].includes(deployStatus.state)) {
+        mappedStatus = "WARNING";
+      } else if (["failure", "error"].includes(deployStatus.state)) {
+        mappedStatus = "CRITICAL";
+      }
+
+      await prisma.logs.create({
+        data: {
+          repoId: dbRepo.id,
+          type: "DEPLOYMENT",
+          message: deployStatus.description || `Deployment ${deployStatus.state}`,
+          status: mappedStatus,
+          metadata: {
+            state: deployStatus.state,
+            environment: deployStatus.environment || deploy.environment,
+            url: deployStatus.environment_url || deployStatus.log_url,
+            sha: deploy.sha?.substring(0, 7) || "unknown",
+            branch: deploy.ref || "unknown",
+            author: deployStatus.creator?.login || "system",
+            time: deployStatus.created_at || new Date().toISOString(),
+          },
+        },
+      });
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

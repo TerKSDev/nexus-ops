@@ -15,7 +15,8 @@ function formatTime(timeStr?: string) {
   if (!timeStr) return "unknown";
   try {
     return formatDistanceToNow(new Date(timeStr), { addSuffix: true });
-  } catch (e) {
+  } catch (error) {
+    console.log(error);
     return timeStr;
   }
 }

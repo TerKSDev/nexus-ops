@@ -3,7 +3,10 @@
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
-export async function registerUser(data: { email?: string; password?: string }) {
+export async function registerUser(data: {
+  email?: string;
+  password?: string;
+}) {
   if (!data.email || !data.password) {
     return { error: "Email and password are required." };
   }
@@ -29,6 +32,7 @@ export async function registerUser(data: { email?: string; password?: string }) 
 
     return { success: true };
   } catch (error) {
+    console.log(error);
     return { error: "Failed to create user." };
   }
 }
