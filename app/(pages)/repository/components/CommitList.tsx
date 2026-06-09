@@ -180,7 +180,7 @@ export default function CommitList({
                   href={`${repoUrl}/commit/${meta.sha || commit.id.substring(0, 7)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative flex items-center justify-between gap-4 p-5 py-4 cursor-pointer overflow-hidden"
+                  className="group relative flex items-start sm:items-center justify-between gap-3 sm:gap-4 p-4 sm:p-5 py-4 cursor-pointer overflow-hidden"
                   initial="idle"
                   whileHover="hover"
                 >
@@ -203,11 +203,11 @@ export default function CommitList({
                     transition={{ duration: 0.2 }}
                   />
 
-                  <div className="flex flex-col gap-1.5 overflow-hidden relative z-10">
-                    <p className="text-neutral-200 font-medium group-hover:text-neutral-50 transition-colors duration-150 line-clamp-1">
+                  <div className="flex flex-col gap-1.5 overflow-hidden relative z-10 min-w-0 w-full">
+                    <p className="text-neutral-200 font-medium group-hover:text-neutral-50 transition-colors duration-150 line-clamp-2 sm:line-clamp-1">
                       {commit.message}
                     </p>
-                    <div className="flex items-center gap-2 text-xs text-neutral-500 group-hover:text-neutral-400 transition-colors duration-150 font-mono">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-neutral-500 group-hover:text-neutral-400 transition-colors duration-150 font-mono mt-0.5">
                       <span className="text-healthy-400/60">
                         #
                         {meta.sha?.substring(0, 7) || commit.id.substring(0, 7)}

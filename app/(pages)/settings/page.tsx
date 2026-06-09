@@ -35,8 +35,8 @@ export default async function SettingsPage() {
     : null;
 
   return (
-    <div className="p-8 px-12 w-full max-w-7xl mx-auto flex flex-col gap-10">
-      {/* Page Header — HSR style */}
+    <div className="p-8 px-12 w-full max-w-7xl mx-auto flex flex-col gap-8">
+      {/* Page Header */}
       <div className="flex items-center gap-4">
         <div className="flex flex-col items-center gap-1 self-stretch py-0.5">
           <div className="w-px flex-1 bg-linear-to-b from-healthy-500 via-healthy-500/40 to-transparent" />
@@ -58,18 +58,30 @@ export default async function SettingsPage() {
         </div>
       </div>
 
+      {/* Row 1 — Account */}
       <FadeIn delay={0.1}>
-        <AccountSettings user={{ email: user.email, isGuest: user.isGuest, hasGithubBound: user.accounts.some(acc => acc.provider === "github") }} />
+        <AccountSettings
+          user={{
+            email: user.email,
+            isGuest: user.isGuest,
+            hasGithubBound: user.accounts.some(
+              (acc) => acc.provider === "github"
+            ),
+          }}
+        />
       </FadeIn>
 
+      {/* Row 2 — Advanced */}
       <FadeIn delay={0.2}>
-        <NotificationSettings settings={decryptedSettings} />
-      </FadeIn>
-
-      <FadeIn delay={0.3}>
         <AdvancedSettings settings={decryptedSettings} />
       </FadeIn>
 
+      {/* Row 2 — Notifications full width */}
+      <FadeIn delay={0.3}>
+        <NotificationSettings settings={decryptedSettings} />
+      </FadeIn>
+
+      {/* Row 3 — Danger Zone full width */}
       <FadeIn delay={0.4}>
         <DangerZone />
       </FadeIn>

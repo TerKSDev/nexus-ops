@@ -15,11 +15,12 @@ import {
   Waypoints,
   Download,
   GitMerge,
+  Wand2,
 } from "lucide-react";
 import { motion } from "motion/react";
 import {
   deleteRepo,
-  regenerateSecret,
+  autoConfigureWebhook,
   clearRepoLogs,
   toggleRepoTracking,
   toggleAutoMerge,
@@ -27,6 +28,7 @@ import {
 } from "@/actions/repository";
 import { syncRepoHistory } from "@/actions/github";
 import { Input } from "@/components/Input";
+import { useToast } from "@/components/ToastProvider";
 
 interface ActionModalProps {
   repoId: string;
@@ -89,6 +91,7 @@ export default function ActionModal({
   isOpen,
   onClose,
 }: ActionModalProps) {
+  const { toast } = useToast();
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -160,11 +163,19 @@ export default function ActionModal({
     setIsEditing(false);
   };
 
-  const handleRegenerate = async () => {
+  const handleAutoConfigure = async () => {
     setIsRegenerating(true);
-    const result = await regenerateSecret(repoId);
-    if (result.success && result.secret) {
-      setNewSecret(result.secret);
+    const baseUrl = window.location.origin;
+    const result = await autoConfigureWebhook(repoId, baseUrl);
+    
+    if (result.success) {
+      toast("Webhook automatically configured via GitHub!", "success");
+      onClose();
+    } else {
+      toast(result.error || "Failed to auto-configure webhook.", "error");
+      if (result.secret) {
+        setNewSecret(result.secret);
+      }
     }
     setIsRegenerating(false);
   };
@@ -193,13 +204,21 @@ export default function ActionModal({
           <h2 className="text-2xl font-bold text-neutral-50 mb-2 tracking-wide">
             Secret Regenerated
           </h2>
-          <p className="text-neutral-400 text-sm leading-relaxed">
-            Please save your new Webhook Secret now. For security reasons,{" "}
+          <p className="text-neutral-400 text-sm leading-relaxed mb-3">
+            Auto-configuration failed (missing GitHub PAT). Please save your new Webhook Secret and set it up manually. For security reasons,{" "}
             <strong className="text-warning-400 font-semibold">
               it will never be shown again
             </strong>
             .
           </p>
+          <a
+            href="https://github.com/settings/tokens/new?scopes=repo,admin:repo_hook&description=Nexus%20Ops%20Integration"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] inline-flex items-center gap-1.5 text-healthy-500 hover:text-healthy-400 font-bold tracking-wide transition-colors bg-healthy-500/10 px-2 py-1 rounded border border-healthy-500/20"
+          >
+            👉 Tip: Set up a GitHub Token in Settings to enable auto-configuration
+          </a>
         </div>
 
         <div className="flex flex-col gap-4 mb-8">
@@ -406,16 +425,18 @@ export default function ActionModal({
           </div>
         </button>
 
-        {/* Regenerate Secret */}
+        {/* Auto-Configure Webhook */}
         <button
-          onClick={handleRegenerate}
+          onClick={handleAutoConfigure}
           disabled={isRegenerating}
-          className="w-full flex items-center justify-center gap-2 bg-neutral-800/70 hover:bg-neutral-700/80 text-neutral-200 py-2.5 rounded-lg font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 border border-neutral-700/50 hover:border-neutral-600/60 text-sm"
+          className="w-full flex items-center justify-center gap-2 bg-healthy-500/10 hover:bg-healthy-500/20 text-healthy-400 py-2.5 rounded-lg font-bold transition-all duration-200 cursor-pointer disabled:opacity-50 border border-healthy-500/30 text-sm"
         >
-          <RefreshCw
-            className={`w-3.5 h-3.5 ${isRegenerating ? "animate-spin" : ""}`}
-          />
-          Regenerate Webhook Secret
+          {isRegenerating ? (
+            <RefreshCw className="w-4 h-4 animate-spin" />
+          ) : (
+            <Wand2 className="w-4 h-4" />
+          )}
+          Auto-Configure Webhook
         </button>
 
         {/* Sync History */}

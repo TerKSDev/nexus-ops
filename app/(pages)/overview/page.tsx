@@ -101,7 +101,7 @@ export default async function DashboardPage() {
   });
 
   return (
-    <div className="p-8 px-12 w-full max-w-[1400px] mx-auto flex flex-col gap-10">
+    <div className="py-8 px-4 md:px-12 w-full max-w-[1400px] mx-auto flex flex-col gap-8 md:gap-10">
       {/* Page Header — HSR style */}
       <div className="flex items-center gap-4">
         <div className="flex flex-col items-center gap-1 self-stretch py-0.5">

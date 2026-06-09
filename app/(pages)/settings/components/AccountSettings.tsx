@@ -66,6 +66,20 @@ export default function AccountSettings({ user }: AccountSettingsProps) {
       </div>
 
       <div className="p-6">
+        {/* User avatar + identity */}
+        <div className="flex items-center gap-4 mb-6 p-4 rounded-lg bg-neutral-950/50 border border-neutral-700/30">
+          <div className="w-10 h-10 rounded-full bg-linear-to-br from-healthy-600 to-healthy-400 flex items-center justify-center text-neutral-950 font-black text-base shrink-0 select-none">
+            {user.email ? user.email[0].toUpperCase() : "?"}
+          </div>
+          <div className="flex flex-col overflow-hidden">
+            <span className="text-neutral-200 font-semibold text-sm truncate">
+              {user.email || "No email set"}
+            </span>
+            <span className="text-neutral-500 text-xs">
+              {user.isGuest ? "Temporary guest session" : "Standard account"}
+            </span>
+          </div>
+        </div>
         {/* Guest upgrade notice */}
         {user.isGuest && (
           <div className="mb-6 p-4 rounded-lg bg-warning-500/[0.07] border border-warning-500/20 flex items-start gap-3">
@@ -104,7 +118,7 @@ export default function AccountSettings({ user }: AccountSettingsProps) {
           />
 
           {/* Connected Accounts Section */}
-          <div className="mt-2 p-4 rounded-lg bg-neutral-900/60 border border-neutral-700/30 flex items-center justify-between group">
+          <div className="mt-2 p-4 rounded-lg bg-neutral-950/50 border border-neutral-700/30 flex items-center justify-between group">
             <div className="flex items-center gap-4">
               <div className="p-2 rounded-lg bg-neutral-800/60 text-neutral-400 group-hover:text-neutral-200 transition-colors">
                 <GitHubIcon />

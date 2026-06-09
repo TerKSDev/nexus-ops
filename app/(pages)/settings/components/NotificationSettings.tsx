@@ -157,32 +157,32 @@ export default function NotificationSettings({
         <div className="flex-1 h-px bg-linear-to-r from-neutral-700/60 to-transparent ml-1" />
       </div>
 
-      <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-8">
+      <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-6">
         {/* Integrations */}
         <div className="flex flex-col gap-4">
           <SectionLabel>Integrations</SectionLabel>
 
-          {/* Discord */}
-          <div className="flex flex-col gap-3 p-4 rounded-lg bg-neutral-950/50 border border-neutral-700/30">
-            <div className="flex items-center justify-between">
-              <label className="text-sm font-bold text-neutral-200 flex items-center gap-2">
-                <MessageSquare className="w-4 h-4 text-[#5865F2]" />
-                Discord
-              </label>
-              <div className="flex items-center gap-2">
-                <span
-                  className={`text-[10px] font-bold uppercase tracking-wider ${enableDiscord ? "text-[#5865F2]" : "text-neutral-600"}`}
-                >
-                  {enableDiscord ? "Enabled" : "Disabled"}
-                </span>
-                <Toggle
-                  enabled={enableDiscord}
-                  onChange={() => setEnableDiscord(!enableDiscord)}
-                  color="discord"
-                />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Discord */}
+            <div className="flex flex-col gap-3 p-4 rounded-lg bg-neutral-950/50 border border-neutral-700/30">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-bold text-neutral-200 flex items-center gap-2">
+                  <MessageSquare className="w-4 h-4 text-[#5865F2]" />
+                  Discord
+                </label>
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`text-[10px] font-bold uppercase tracking-wider ${enableDiscord ? "text-[#5865F2]" : "text-neutral-600"}`}
+                  >
+                    {enableDiscord ? "On" : "Off"}
+                  </span>
+                  <Toggle
+                    enabled={enableDiscord}
+                    onChange={() => setEnableDiscord(!enableDiscord)}
+                    color="discord"
+                  />
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-3">
               <Input
                 type="password"
                 value={discordWebhook}
@@ -195,34 +195,32 @@ export default function NotificationSettings({
                 type="button"
                 onClick={handleTestDiscord}
                 disabled={!enableDiscord || !discordWebhook || testingDiscord}
-                className="px-4 py-2.5 rounded-lg border border-[#5865F2]/40 text-[#5865F2]/80 font-semibold text-sm hover:bg-[#5865F2]/10 hover:border-[#5865F2]/60 hover:text-[#5865F2] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-center cursor-pointer"
+                className="w-full px-4 py-2 rounded-lg border border-[#5865F2]/40 text-[#5865F2]/80 font-semibold text-sm hover:bg-[#5865F2]/10 hover:border-[#5865F2]/60 hover:text-[#5865F2] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-center cursor-pointer"
               >
-                {testingDiscord ? "Ping..." : "Test"}
+                {testingDiscord ? "Sending..." : "Send Test Message"}
               </button>
             </div>
-          </div>
 
-          {/* Telegram */}
-          <div className="flex flex-col gap-3 p-4 rounded-lg bg-neutral-950/50 border border-neutral-700/30">
-            <div className="flex items-center justify-between">
-              <label className="text-sm font-bold text-neutral-200 flex items-center gap-2">
-                <Send className="w-4 h-4 text-[#0088cc]" />
-                Telegram
-              </label>
-              <div className="flex items-center gap-2">
-                <span
-                  className={`text-[10px] font-bold uppercase tracking-wider ${enableTelegram ? "text-[#0088cc]" : "text-neutral-600"}`}
-                >
-                  {enableTelegram ? "Enabled" : "Disabled"}
-                </span>
-                <Toggle
-                  enabled={enableTelegram}
-                  onChange={() => setEnableTelegram(!enableTelegram)}
-                  color="telegram"
-                />
+            {/* Telegram */}
+            <div className="flex flex-col gap-3 p-4 rounded-lg bg-neutral-950/50 border border-neutral-700/30">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-bold text-neutral-200 flex items-center gap-2">
+                  <Send className="w-4 h-4 text-[#0088cc]" />
+                  Telegram
+                </label>
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`text-[10px] font-bold uppercase tracking-wider ${enableTelegram ? "text-[#0088cc]" : "text-neutral-600"}`}
+                  >
+                    {enableTelegram ? "On" : "Off"}
+                  </span>
+                  <Toggle
+                    enabled={enableTelegram}
+                    onChange={() => setEnableTelegram(!enableTelegram)}
+                    color="telegram"
+                  />
+                </div>
               </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Input
                 type="password"
                 value={telegramBotToken}
@@ -231,113 +229,111 @@ export default function NotificationSettings({
                 disabled={!enableTelegram}
                 variant="telegram"
               />
-              <div className="flex items-center gap-3">
-                <Input
-                  type="password"
-                  value={telegramChatId}
-                  onChange={(e) => setTelegramChatId(e.target.value)}
-                  placeholder="Chat ID: -100123456789"
-                  disabled={!enableTelegram}
-                  variant="telegram"
-                />
-                <button
-                  type="button"
-                  onClick={handleTestTelegram}
-                  disabled={
-                    !enableTelegram ||
-                    !telegramBotToken ||
-                    !telegramChatId ||
-                    testingTelegram
-                  }
-                  className="px-4 py-2.5 rounded-lg border border-[#0088cc]/40 text-[#0088cc]/80 font-semibold text-sm hover:bg-[#0088cc]/10 hover:border-[#0088cc]/60 hover:text-[#0088cc] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-center cursor-pointer"
-                >
-                  {testingTelegram ? "Ping..." : "Test"}
-                </button>
-              </div>
+              <Input
+                type="password"
+                value={telegramChatId}
+                onChange={(e) => setTelegramChatId(e.target.value)}
+                placeholder="Chat ID: -100123456789"
+                disabled={!enableTelegram}
+                variant="telegram"
+              />
+              <button
+                type="button"
+                onClick={handleTestTelegram}
+                disabled={!enableTelegram || !telegramBotToken || !telegramChatId || testingTelegram}
+                className="w-full px-4 py-2 rounded-lg border border-[#0088cc]/40 text-[#0088cc]/80 font-semibold text-sm hover:bg-[#0088cc]/10 hover:border-[#0088cc]/60 hover:text-[#0088cc] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-center cursor-pointer"
+              >
+                {testingTelegram ? "Sending..." : "Send Test Message"}
+              </button>
             </div>
           </div>
         </div>
+
+        {/* Divider */}
+        <div className="h-px bg-linear-to-r from-transparent via-neutral-700/50 to-transparent" />
 
         {/* Event Triggers */}
         <div className="flex flex-col gap-3">
           <SectionLabel>Event Triggers</SectionLabel>
 
-          {/* Critical Errors toggle row */}
-          <div
-            className="flex items-center justify-between p-4 rounded-lg bg-neutral-900/60 border border-neutral-700/30 hover:border-neutral-600/40 hover:bg-neutral-800/40 transition-all duration-200 cursor-pointer group"
-            onClick={() => setNotifyErrors(!notifyErrors)}
-          >
-            <div className="flex items-center gap-4">
-              <div
-                className={`p-2 rounded-lg transition-all ${notifyErrors ? "bg-critical-500/10 text-critical-400 border border-critical-500/25" : "bg-neutral-800/60 text-neutral-600 border border-transparent"}`}
-              >
-                <ShieldAlert className="w-4 h-4" />
+          <div className="flex flex-col gap-2">
+            {/* Critical Errors toggle row */}
+            <div
+              className="flex items-center justify-between p-4 rounded-lg bg-neutral-950/50 border border-neutral-700/30 hover:border-neutral-600/40 hover:bg-neutral-900/60 transition-all duration-200 cursor-pointer group"
+              onClick={() => setNotifyErrors(!notifyErrors)}
+            >
+              <div className="flex items-center gap-4">
+                <div
+                  className={`p-2 rounded-lg transition-all ${notifyErrors ? "bg-critical-500/10 text-critical-400 border border-critical-500/25" : "bg-neutral-800/60 text-neutral-600 border border-transparent"}`}
+                >
+                  <ShieldAlert className="w-4 h-4" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-neutral-200 font-semibold text-sm">
+                    Critical Errors
+                  </span>
+                  <span className="text-neutral-500 text-xs">
+                    Receive alerts when CRITICAL level logs occur.
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <span className="text-neutral-200 font-semibold text-sm">
-                  Critical Errors
-                </span>
-                <span className="text-neutral-500 text-xs">
-                  Receive alerts when CRITICAL level logs occur.
-                </span>
-              </div>
+              <Toggle
+                enabled={notifyErrors}
+                onChange={() => setNotifyErrors(!notifyErrors)}
+              />
             </div>
-            <Toggle
-              enabled={notifyErrors}
-              onChange={() => setNotifyErrors(!notifyErrors)}
-            />
-          </div>
 
-          {/* Pull Requests toggle row */}
-          <div
-            className="flex items-center justify-between p-4 rounded-lg bg-neutral-900/60 border border-neutral-700/30 hover:border-neutral-600/40 hover:bg-neutral-800/40 transition-all duration-200 cursor-pointer"
-            onClick={() => setNotifyPRs(!notifyPRs)}
-          >
-            <div className="flex items-center gap-4">
-              <div
-                className={`p-2 rounded-lg transition-all ${notifyPRs ? "bg-warning-500/10 text-warning-400 border border-warning-500/25" : "bg-neutral-800/60 text-neutral-600 border border-transparent"}`}
-              >
-                <GitPullRequest className="w-4 h-4" />
+            {/* Pull Requests toggle row */}
+            <div
+              className="flex items-center justify-between p-4 rounded-lg bg-neutral-950/50 border border-neutral-700/30 hover:border-neutral-600/40 hover:bg-neutral-900/60 transition-all duration-200 cursor-pointer"
+              onClick={() => setNotifyPRs(!notifyPRs)}
+            >
+              <div className="flex items-center gap-4">
+                <div
+                  className={`p-2 rounded-lg transition-all ${notifyPRs ? "bg-warning-500/10 text-warning-400 border border-warning-500/25" : "bg-neutral-800/60 text-neutral-600 border border-transparent"}`}
+                >
+                  <GitPullRequest className="w-4 h-4" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-neutral-200 font-semibold text-sm">
+                    Pull Requests
+                  </span>
+                  <span className="text-neutral-500 text-xs">
+                    Get notified of new or merged Pull Requests.
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <span className="text-neutral-200 font-semibold text-sm">
-                  Pull Requests
-                </span>
-                <span className="text-neutral-500 text-xs">
-                  Get notified of new or merged Pull Requests.
-                </span>
-              </div>
+              <Toggle
+                enabled={notifyPRs}
+                onChange={() => setNotifyPRs(!notifyPRs)}
+              />
             </div>
-            <Toggle
-              enabled={notifyPRs}
-              onChange={() => setNotifyPRs(!notifyPRs)}
-            />
-          </div>
 
-          {/* Deployments toggle row */}
-          <div
-            className="flex items-center justify-between p-4 rounded-lg bg-neutral-900/60 border border-neutral-700/30 hover:border-neutral-600/40 hover:bg-neutral-800/40 transition-all duration-200 cursor-pointer"
-            onClick={() => setNotifyDeployments(!notifyDeployments)}
-          >
-            <div className="flex items-center gap-4">
-              <div
-                className={`p-2 rounded-lg transition-all ${notifyDeployments ? "bg-healthy-500/10 text-healthy-400 border border-healthy-500/25" : "bg-neutral-800/60 text-neutral-600 border border-transparent"}`}
-              >
-                <Rocket className="w-4 h-4" />
+            {/* Deployments toggle row */}
+            <div
+              className="flex items-center justify-between p-4 rounded-lg bg-neutral-950/50 border border-neutral-700/30 hover:border-neutral-600/40 hover:bg-neutral-900/60 transition-all duration-200 cursor-pointer"
+              onClick={() => setNotifyDeployments(!notifyDeployments)}
+            >
+              <div className="flex items-center gap-4">
+                <div
+                  className={`p-2 rounded-lg transition-all ${notifyDeployments ? "bg-healthy-500/10 text-healthy-400 border border-healthy-500/25" : "bg-neutral-800/60 text-neutral-600 border border-transparent"}`}
+                >
+                  <Rocket className="w-4 h-4" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-neutral-200 font-semibold text-sm">
+                    Deployments
+                  </span>
+                  <span className="text-neutral-500 text-xs">
+                    Alerts on deployment successes and failures.
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <span className="text-neutral-200 font-semibold text-sm">
-                  Deployments
-                </span>
-                <span className="text-neutral-500 text-xs">
-                  Alerts on deployment successes and failures.
-                </span>
-              </div>
+              <Toggle
+                enabled={notifyDeployments}
+                onChange={() => setNotifyDeployments(!notifyDeployments)}
+              />
             </div>
-            <Toggle
-              enabled={notifyDeployments}
-              onChange={() => setNotifyDeployments(!notifyDeployments)}
-            />
           </div>
         </div>
 

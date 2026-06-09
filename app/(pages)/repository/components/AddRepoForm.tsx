@@ -1,17 +1,29 @@
 "use client";
-import { useActionState, useState } from "react";
+import { useActionState, useState, useEffect } from "react";
 import { addRepo } from "@/actions/repository";
 import SecretModal from "./SecretModal";
 import { Input } from "@/components/Input";
+import { useToast } from "@/components/ToastProvider";
 
 export default function AddRepoForm() {
   const [state, formAction, isPending] = useActionState(addRepo, null);
   const [closedSecrets, setClosedSecrets] = useState<string[]>([]);
   const [copied, setCopied] = useState<string | null>(null);
+  const { toast } = useToast();
 
-  // 不使用 useEffect，直接透過 state 推導出是否要顯示 Modal
+  useEffect(() => {
+    if (state?.success) {
+      if (state.autoConfigured) {
+        toast("Repository added and webhook automatically configured!", "success");
+      } else if (!state.secret) {
+        toast("Repository added successfully.", "success");
+      }
+    }
+  }, [state, toast]);
+
+  // Only show modal if NOT auto-configured AND we have a secret AND user hasn't closed it
   const showModal =
-    state?.success && state?.secret && !closedSecrets.includes(state.secret);
+    state?.success && state?.secret && !state.autoConfigured && !closedSecrets.includes(state.secret);
 
   const handleCopy = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
@@ -44,7 +56,7 @@ export default function AddRepoForm() {
       <form action={formAction} className="flex flex-col justify-center gap-1">
         <div className="flex items-center gap-3">
           <Input
-            className="min-w-72"
+            className="flex-1 md:min-w-72"
             placeholder="https://github.com/username/repo"
             name="url"
             type="text"

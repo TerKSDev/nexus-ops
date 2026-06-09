@@ -10,6 +10,8 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import { motion } from "motion/react";
 import FadeIn from "@/app/(pages)/repository/components/FadeIn";
+import Link from "next/link";
+import { Plus } from "lucide-react";
 
 import { useState } from "react";
 import { redeployVercel } from "@/actions/vercel";
@@ -103,7 +105,7 @@ export default function GlobalActivityFeed({
                   href={link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative flex items-center justify-between gap-4 p-5 py-4 cursor-pointer overflow-hidden"
+                  className="group relative flex items-start sm:items-center justify-between gap-3 sm:gap-4 p-4 sm:p-5 py-4 cursor-pointer overflow-hidden"
                   initial="idle"
                   whileHover="hover"
                 >
@@ -123,17 +125,17 @@ export default function GlobalActivityFeed({
                     transition={{ duration: 0.2 }}
                   />
 
-                  <div className="flex flex-col gap-1.5 overflow-hidden relative z-10 min-w-0">
-                    <div className="flex items-center gap-2 min-w-0">
+                  <div className="flex flex-col gap-1.5 overflow-hidden relative z-10 min-w-0 w-full">
+                    <div className="flex flex-wrap sm:flex-nowrap items-start sm:items-center gap-2 min-w-0">
                       <TypeIcon className="w-3.5 h-3.5 text-neutral-500 group-hover:text-healthy-400 transition-colors shrink-0" />
                       <span className="text-[9px] px-2 py-0.5 bg-neutral-800/60 border border-neutral-700/40 text-neutral-500 font-bold rounded tracking-widest uppercase shrink-0 group-hover:border-healthy-500/25 group-hover:text-healthy-400/70 transition-all">
                         {log.repo?.name || "System"}
                       </span>
-                      <p className="text-neutral-200 font-medium group-hover:text-neutral-50 transition-colors duration-150 truncate">
+                      <p className="text-neutral-200 font-medium group-hover:text-neutral-50 transition-colors duration-150 line-clamp-2 sm:truncate">
                         {log.message}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-neutral-500 font-mono ml-5 group-hover:text-neutral-400 transition-colors">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-neutral-500 font-mono ml-5 group-hover:text-neutral-400 transition-colors">
                       <span className="text-healthy-400/50">
                         {isCommit && meta.sha
                           ? `#${meta.sha.substring(0, 7)}`
@@ -159,7 +161,7 @@ export default function GlobalActivityFeed({
                         <button
                           onClick={(e) => handleRedeploy(e, log)}
                           disabled={loadingDeployId === log.id}
-                          className="ml-auto px-2 py-0.5 rounded border border-warning-500/30 text-warning-400 bg-warning-500/10 hover:bg-warning-500/20 text-[10px] uppercase font-bold tracking-widest transition-colors z-20 relative cursor-pointer disabled:opacity-50"
+                          className="sm:ml-auto mt-1 sm:mt-0 px-2 py-0.5 rounded border border-warning-500/30 text-warning-400 bg-warning-500/10 hover:bg-warning-500/20 text-[10px] uppercase font-bold tracking-widest transition-colors z-20 relative cursor-pointer disabled:opacity-50"
                         >
                           {loadingDeployId === log.id ? "Triggering..." : "Rerun Deploy"}
                         </button>
@@ -208,9 +210,16 @@ export default function GlobalActivityFeed({
               <span className="text-healthy-500/25 text-[8px]">◆</span>
               <div className="h-px w-8 bg-linear-to-r from-neutral-700/60 to-transparent" />
             </div>
-            <p className="text-neutral-500 text-xs max-w-64 leading-relaxed">
+            <p className="text-neutral-500 text-xs max-w-64 leading-relaxed mb-6">
               Connect a GitHub repository to start syncing events.
             </p>
+            <Link
+              href="/repository"
+              className="flex items-center gap-2 bg-linear-to-r from-healthy-600 to-healthy-500 text-neutral-950 px-5 py-2.5 rounded-lg font-bold hover:from-healthy-500 hover:to-healthy-400 hover:shadow-[0_0_20px_rgba(0,229,255,0.3)] transition-all duration-300 text-sm"
+            >
+              <Plus className="w-4 h-4" />
+              Add Your First Repository
+            </Link>
           </div>
         )}
       </div>

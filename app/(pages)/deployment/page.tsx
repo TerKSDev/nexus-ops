@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import DeploymentList from "./components/DeploymentList";
+import DeploymentList, { DeploymentLog } from "./components/DeploymentList";
 
 export default async function VercelPage() {
   const session = await auth();
@@ -65,7 +65,7 @@ export default async function VercelPage() {
       </div>
 
       <div className="flex flex-col gap-8 flex-1">
-        <DeploymentList initialDeployments={deployments as any} repos={repos} />
+        <DeploymentList initialDeployments={deployments as unknown as DeploymentLog[]} repos={repos} />
       </div>
     </div>
   );

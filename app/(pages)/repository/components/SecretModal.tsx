@@ -58,13 +58,21 @@ export default function SecretModal({
           <h2 className="text-2xl font-bold text-neutral-50 mb-2 tracking-wide">
             Repository Added!
           </h2>
-          <p className="text-neutral-400 text-sm leading-relaxed">
-            Please save your Webhook Secret now. For security reasons,{" "}
+          <p className="text-neutral-400 text-sm leading-relaxed mb-3">
+            We couldn&apos;t auto-configure the Webhook (missing GitHub PAT). Please add it to your GitHub repository settings manually. For security,{" "}
             <strong className="text-warning-400 font-semibold">
               it will never be shown again
             </strong>
             .
           </p>
+          <a
+            href="https://github.com/settings/tokens/new?scopes=repo,admin:repo_hook&description=Nexus%20Ops%20Integration"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] inline-flex items-center gap-1.5 text-healthy-500 hover:text-healthy-400 font-bold tracking-wide transition-colors bg-healthy-500/10 px-2 py-1 rounded border border-healthy-500/20"
+          >
+            👉 Tip: Set up a GitHub Token in Settings to enable auto-configuration next time
+          </a>
         </div>
 
         {/* Copy fields */}

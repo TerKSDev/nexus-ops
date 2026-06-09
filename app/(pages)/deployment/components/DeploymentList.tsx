@@ -16,7 +16,7 @@ import FadeIn from "@/app/(pages)/repository/components/FadeIn";
 import { getMoreDeployments } from "@/actions/logs";
 import { motion } from "motion/react";
 
-type DeploymentLog = {
+export type DeploymentLog = {
   id: string;
   type: string;
   message: string;
@@ -146,16 +146,16 @@ export default function DeploymentList({
           <div className="h-px w-10 bg-linear-to-r from-neutral-700/60 to-transparent" />
         </div>
         <p className="text-neutral-500 text-sm max-w-md text-center leading-relaxed relative z-10">
-          No deployment events received from GitHub. Make sure your CI/CD
-          platform (Vercel, Netlify, etc.) is linked to your repository and
-          deployment webhooks are enabled.
+          No deployment events received yet.<br/><br/>
+          <span className="text-healthy-400/80 font-bold tracking-wide">💡 Beginner Tip:</span><br/>
+          Simply log into Vercel or Netlify, connect your GitHub repository, and any future deployments will automatically show up here. No extra configuration needed!
         </p>
       </div>
     );
   }
 
   return (
-    <div className="bg-neutral-900/70 border border-neutral-700/40 shadow-[0_4px_24px_rgba(0,0,0,0.4)] rounded-lg overflow-hidden flex flex-col relative">
+    <div className="bg-neutral-900/70 border border-neutral-700/40 shadow-[0_4px_24px_rgba(0,0,0,0.4)] rounded-lg overflow-hidden flex flex-col relative max-h-[calc(100vh-190px)]">
       {/* Panel Header */}
       <div className="p-4 px-5 border-b border-neutral-700/40 flex items-center justify-between bg-neutral-800/30 relative z-10">
         <div className="flex items-center gap-3">
@@ -204,7 +204,7 @@ export default function DeploymentList({
         </div>
       </div>
 
-      <div className="divide-y divide-neutral-800/60 relative z-10">
+      <div className="divide-y divide-neutral-800/60 relative z-10 overflow-y-auto flex-1">
         {deployments.length === 0 ? (
           <div className="p-10 flex flex-col items-center justify-center text-center">
             <p className="text-neutral-500 text-sm">
@@ -240,7 +240,7 @@ export default function DeploymentList({
                   href={meta.url || undefined}
                   target={meta.url ? "_blank" : undefined}
                   rel={meta.url ? "noopener noreferrer" : undefined}
-                  className="group relative p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer overflow-hidden"
+                  className="group relative p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 cursor-pointer overflow-hidden"
                   initial="idle"
                   whileHover="hover"
                 >
@@ -276,7 +276,7 @@ export default function DeploymentList({
                     transition={{ duration: 0.2 }}
                   />
 
-                  <div className="flex items-start sm:items-center gap-5 relative z-10">
+                  <div className="flex items-start sm:items-center gap-3 sm:gap-5 relative z-10 w-full sm:w-auto min-w-0">
                     {/* Status icon */}
                     <div className="mt-0.5 sm:mt-0 shrink-0">
                       {isReady ? (
@@ -320,7 +320,7 @@ export default function DeploymentList({
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-6 sm:pl-0 pl-10 relative z-10 shrink-0">
+                  <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4 sm:gap-6 sm:pl-0 pl-8 relative z-10 shrink-0 mt-2 sm:mt-0">
                     <div className="flex flex-col sm:items-end gap-1">
                       <span className="text-xs font-mono text-neutral-400 whitespace-nowrap group-hover:text-neutral-300 transition-colors">
                         {formatDistanceToNow(new Date(dpl.createdAt), {

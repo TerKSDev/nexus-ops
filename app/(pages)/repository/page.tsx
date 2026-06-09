@@ -29,9 +29,9 @@ export default async function RepositoryPage() {
   });
 
   return (
-    <div className="p-8 px-12 w-full max-w-7xl mx-auto flex flex-1 flex-col gap-10">
+    <div className="py-8 px-4 md:px-12 w-full max-w-7xl mx-auto flex flex-1 flex-col gap-8 md:gap-10">
       {/* Page Header — HSR style */}
-      <div className="flex items-start justify-between gap-8">
+      <div className="flex md:flex-row flex-col md:items-start justify-between gap-8">
         <div className="flex items-center gap-4">
           {/* Vertical accent bar with diamond cap */}
           <div className="flex flex-col items-center gap-1 self-stretch py-0.5">
@@ -62,8 +62,14 @@ export default async function RepositoryPage() {
           <>
             {repos.map((repo, repoIdx) => {
               const sortedLogs = [...repo.logs].sort((a, b) => {
-                const timeA = new Date((a.metadata as Record<string, unknown>)?.time as string || a.createdAt).getTime();
-                const timeB = new Date((b.metadata as Record<string, unknown>)?.time as string || b.createdAt).getTime();
+                const timeA = new Date(
+                  ((a.metadata as Record<string, unknown>)?.time as string) ||
+                    a.createdAt,
+                ).getTime();
+                const timeB = new Date(
+                  ((b.metadata as Record<string, unknown>)?.time as string) ||
+                    b.createdAt,
+                ).getTime();
                 return timeB - timeA;
               });
               const rawCommits = sortedLogs.filter(
@@ -81,11 +87,13 @@ export default async function RepositoryPage() {
                   className="flex flex-col gap-4 relative"
                 >
                   {/* Repo Section Header — HSR chapter style */}
-                  <div className="flex items-center gap-3">
-                    <div className="w-0.5 h-5 bg-linear-to-b from-healthy-500 to-healthy-500/0 shrink-0" />
-                    <h2 className="text-sm font-bold text-neutral-100 tracking-widest uppercase shrink-0">
-                      {repo.name}
-                    </h2>
+                  <div className="flex flex-col md:flex-row md:items-center gap-3">
+                    <div className="flex gap-3 items-center">
+                      <div className="w-0.5 h-4 bg-linear-to-b from-healthy-500 to-healthy-500/0 shrink-0" />
+                      <h2 className="text-sm font-bold text-neutral-100 tracking-widest uppercase shrink-0">
+                        {repo.name}
+                      </h2>
+                    </div>
 
                     {/* Status badge — small geometric style */}
                     {repo.isActive ? (
@@ -105,10 +113,10 @@ export default async function RepositoryPage() {
                     )}
 
                     {/* Fading separator line */}
-                    <div className="flex-1 h-px bg-linear-to-r from-neutral-700/50 to-transparent" />
+                    <div className="hidden md:flex flex-1 h-px bg-linear-to-r from-neutral-700/50 to-transparent" />
 
                     {/* Right: URL + actions */}
-                    <div className="flex items-center gap-3 shrink-0">
+                    <div className="flex items-center gap-3 shrink-0 md:justify-end justify-between">
                       <a
                         href={repo.url || ""}
                         target="_blank"
@@ -129,7 +137,7 @@ export default async function RepositoryPage() {
                   </div>
 
                   {/* Content Grid */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-100 max-h-120">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-150 max-h-170 md:min-h-100 md:max-h-120">
                     <CommitList
                       initialCommits={rawCommits as unknown as Log[]}
                       repoUrl={repo.url || ""}

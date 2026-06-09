@@ -197,3 +197,106 @@ export async function mergePullRequest(repoId: string, prNumber: number) {
     return { error: "Internal server error while merging PR." };
   }
 }
+
+export async function fetchGithubRepos() {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return { error: "Unauthorized" };
+    }
+
+    const userSettings = await prisma.userSettings.findUnique({
+      where: { userId: session.user.id },
+    });
+
+    if (!userSettings?.githubToken) {
+      return { error: "GitHub Personal Access Token not configured. Please add it in Settings." };
+    }
+
+    const token = decrypt(userSettings.githubToken);
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.github.v3+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+    };
+
+    const res = await fetch(`https://api.github.com/user/repos?per_page=100&sort=updated`, {
+      headers,
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      console.error(`GitHub API Repos Error: ${res.status}`, errorData);
+      return { error: "Failed to fetch repositories. Please check your token and permissions." };
+    }
+
+    const reposData = await res.json();
+    const repos = reposData.map((repo: Record<string, unknown>) => ({
+      name: repo.name as string,
+      full_name: repo.full_name as string,
+      html_url: repo.html_url as string,
+      private: repo.private as boolean,
+      updated_at: repo.updated_at as string,
+    }));
+
+    return { success: true, data: repos };
+  } catch (error) {
+    console.error("Fetch Repos Error:", error);
+    return { error: "Internal server error while fetching repos." };
+  }
+}
+
+export async function setupGithubWebhook(repoFullName: string, webhookUrl: string, secret: string) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return { error: "Unauthorized" };
+    }
+
+    const userSettings = await prisma.userSettings.findUnique({
+      where: { userId: session.user.id },
+    });
+
+    if (!userSettings?.githubToken) {
+      return { error: "GitHub Token missing." };
+    }
+
+    const token = decrypt(userSettings.githubToken);
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.github.v3+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+    };
+
+    const payload = {
+      name: "web",
+      active: true,
+      events: ["push", "pull_request", "deployment_status"],
+      config: {
+        url: webhookUrl,
+        content_type: "json",
+        secret: secret,
+        insecure_ssl: "0"
+      }
+    };
+
+    const res = await fetch(`https://api.github.com/repos/${repoFullName}/hooks`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      console.error(`GitHub Webhook Error: ${res.status}`, errorData);
+      return { error: "Failed to configure webhook. Check permissions." };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Setup Webhook Error:", error);
+    return { error: "Internal server error while setting up webhook." };
+  }
+}

@@ -59,7 +59,7 @@ function MergeButton({ repoId, prNumber }: { repoId: string; prNumber: number })
     <button
       onClick={handleMerge}
       disabled={isMerging}
-      className="ml-auto mr-4 px-3 py-1.5 bg-purple-600/20 hover:bg-purple-600/40 border border-purple-500/40 rounded-md text-purple-400 text-xs font-bold uppercase tracking-wider transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 relative z-20 cursor-pointer shadow-[0_0_10px_rgba(168,85,247,0.1)] hover:shadow-[0_0_15px_rgba(168,85,247,0.3)]"
+      className="sm:ml-auto px-3 py-1.5 bg-purple-600/20 hover:bg-purple-600/40 border border-purple-500/40 rounded-md text-purple-400 text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-all disabled:opacity-50 flex items-center justify-center gap-1.5 shrink-0 relative z-20 cursor-pointer shadow-[0_0_10px_rgba(168,85,247,0.1)] hover:shadow-[0_0_15px_rgba(168,85,247,0.3)] w-full sm:w-auto mt-2 sm:mt-0"
     >
       {isMerging ? (
         <Loader2 className="w-3 h-3 animate-spin" />
@@ -173,7 +173,7 @@ export default function PrList({
                   href={`${repoUrl}/pull/${meta.prNumber}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative flex items-center justify-between gap-4 p-5 py-4 cursor-pointer overflow-hidden"
+                  className="group relative flex items-start sm:items-center justify-between gap-3 sm:gap-4 p-4 sm:p-5 py-4 cursor-pointer overflow-hidden"
                   initial="idle"
                   whileHover="hover"
                 >
@@ -196,16 +196,16 @@ export default function PrList({
                     transition={{ duration: 0.2 }}
                   />
 
-                  <div className="flex flex-col gap-px overflow-hidden relative z-10 flex-1">
-                    <p className="text-neutral-200 font-medium group-hover:text-neutral-50 transition-colors duration-150 line-clamp-1">
+                  <div className="flex flex-col gap-1 sm:gap-px overflow-hidden relative z-10 flex-1 min-w-0 w-full">
+                    <p className="text-neutral-200 font-medium group-hover:text-neutral-50 transition-colors duration-150 line-clamp-2 sm:line-clamp-1">
                       {pr.message}
                     </p>
                     {meta.description && (
-                      <p className="text-neutral-400 text-xs line-clamp-2 group-hover:text-neutral-300 transition-colors duration-200">
+                      <p className="text-neutral-400 text-[10px] sm:text-xs line-clamp-2 group-hover:text-neutral-300 transition-colors duration-200">
                         {meta.description}
                       </p>
                     )}
-                    <div className="flex items-center gap-2 text-xs text-neutral-500 group-hover:text-neutral-400 transition-colors duration-200 font-mono mt-2">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-neutral-500 group-hover:text-neutral-400 transition-colors duration-200 font-mono mt-1 sm:mt-2">
                       <span
                         className={
                           isMerged
@@ -220,11 +220,11 @@ export default function PrList({
                       <span className="text-neutral-700">·</span>
                       <span>{formatTime(meta.time)}</span>
                     </div>
-                  </div>
 
-                  {!isMerged && !isClosed && meta.prNumber && (
-                    <MergeButton repoId={repoId} prNumber={meta.prNumber} />
-                  )}
+                    {!isMerged && !isClosed && meta.prNumber && (
+                      <MergeButton repoId={repoId} prNumber={meta.prNumber} />
+                    )}
+                  </div>
 
                   <div
                     className={`p-2 rounded-full border shrink-0 relative z-10 ${
