@@ -1,7 +1,13 @@
 "use client";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, GitMerge, Triangle, Settings } from "lucide-react";
+import {
+  LayoutDashboard,
+  GitMerge,
+  Triangle,
+  Settings,
+  Book,
+} from "lucide-react";
 
 export const navLinks = [
   { href: "/overview", label: "Overview", icon: LayoutDashboard },
@@ -80,6 +86,13 @@ export default function SideNav() {
           );
         })}
       </nav>
+      <Link
+        href="/docs"
+        className={`flex items-center gap-3.5 px-3.5 py-2.5 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800/60 font-medium transition-all duration-200 group relative overflow-hidden mt-auto`}
+      >
+        <Book className="w-4 h-4 shrink-0 transition-all duration-200" />
+        DOCS
+      </Link>
     </aside>
   );
 }

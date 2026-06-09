@@ -23,6 +23,7 @@ import {
   toggleRepoTracking,
   updateRepo,
 } from "@/actions/repository";
+import { syncRepoHistory } from "@/actions/github";
 import { Input } from "@/components/Input";
 
 interface ActionModalProps {
@@ -100,6 +101,17 @@ export default function ActionModal({
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [newSecret, setNewSecret] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncResult, setSyncResult] = useState<{ success?: boolean; count?: number; error?: string } | null>(null);
+
+  const handleSync = async () => {
+    setIsSyncing(true);
+    setSyncResult(null);
+    const result = await syncRepoHistory(repoId);
+    setSyncResult(result as any);
+    setIsSyncing(false);
+  };
 
   if (!isOpen) return null;
 
@@ -371,6 +383,23 @@ export default function ActionModal({
           />
           Regenerate Webhook Secret
         </button>
+
+        {/* Sync History */}
+        <button
+          onClick={handleSync}
+          disabled={isSyncing}
+          className="w-full flex items-center justify-center gap-2 bg-neutral-800/70 hover:bg-neutral-700/80 text-neutral-200 py-2.5 rounded-lg font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 border border-neutral-700/50 hover:border-healthy-500/40 text-sm hover:text-healthy-400"
+        >
+          <Download
+            className={`w-3.5 h-3.5 ${isSyncing ? "animate-bounce" : ""}`}
+          />
+          {isSyncing ? "Syncing..." : "Sync History via GitHub PAT"}
+        </button>
+        {syncResult && (
+          <div className={`text-[10px] tracking-wide text-center uppercase ${syncResult.error ? "text-critical-400" : "text-healthy-400"}`}>
+            {syncResult.error || `Synced ${syncResult.count} new records.`}
+          </div>
+        )}
 
         {/* Separator */}
         <div className="flex items-center gap-3 my-1">

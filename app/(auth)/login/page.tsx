@@ -9,7 +9,7 @@ import { Input } from "@/components/Input";
 import { motion, AnimatePresence } from "motion/react";
 
 // GitHub SVG icon
-function GitHubIcon() {
+export function GitHubIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

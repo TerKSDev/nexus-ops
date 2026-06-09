@@ -61,9 +61,11 @@ export default async function RepositoryPage() {
         {repos.length > 0 ? (
           <>
             {repos.map((repo, repoIdx) => {
-              const sortedLogs = [...repo.logs].sort(
-                (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
-              );
+              const sortedLogs = [...repo.logs].sort((a, b) => {
+                const timeA = new Date((a.metadata as any)?.time || a.createdAt).getTime();
+                const timeB = new Date((b.metadata as any)?.time || b.createdAt).getTime();
+                return timeB - timeA;
+              });
               const rawCommits = sortedLogs.filter(
                 (log) => log.type === "COMMIT",
               );

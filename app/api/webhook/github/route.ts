@@ -56,7 +56,9 @@ export async function POST(req: Request) {
       let shouldSend = false;
       if (status === "CRITICAL" && userSettings.notifyErrors) shouldSend = true;
       if (type === "PULL_REQUEST" && userSettings.notifyPRs) shouldSend = true;
-      if (type === "DEPLOYMENT" && userSettings.notifyDeployments) shouldSend = true;
+      if (type === "DEPLOYMENT" && userSettings.notifyDeployments && status !== "WARNING") {
+        shouldSend = true;
+      }
 
       // Commit 預設不一定要發，除非有出錯
       if (!shouldSend) return;

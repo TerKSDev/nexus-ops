@@ -16,7 +16,7 @@ export default async function SettingsPage() {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    include: { settings: true },
+    include: { settings: true, accounts: true },
   });
 
   if (!user) {
@@ -58,7 +58,7 @@ export default async function SettingsPage() {
       </div>
 
       <FadeIn delay={0.1}>
-        <AccountSettings user={{ email: user.email, isGuest: user.isGuest }} />
+        <AccountSettings user={{ email: user.email, isGuest: user.isGuest, hasGithubBound: user.accounts.some(acc => acc.provider === "github") }} />
       </FadeIn>
 
       <FadeIn delay={0.2}>

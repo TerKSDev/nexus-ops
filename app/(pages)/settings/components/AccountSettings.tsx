@@ -2,15 +2,17 @@
 
 import { useState } from "react";
 import { updateAccount } from "@/actions/settings";
-import { signOut } from "next-auth/react";
-import { User, LogOut, ShieldAlert } from "lucide-react";
+import { signOut, signIn } from "next-auth/react";
+import { User, LogOut, ShieldAlert, CheckCircle2 } from "lucide-react";
 import { Input } from "@/components/Input";
 import { useToast } from "@/components/ToastProvider";
+import { GitHubIcon } from "@/app/(auth)/login/page";
 
 interface AccountSettingsProps {
   user: {
     email: string | null;
     isGuest: boolean;
+    hasGithubBound: boolean;
   };
 }
 
@@ -100,6 +102,41 @@ export default function AccountSettings({ user }: AccountSettingsProps) {
             required={user.isGuest}
             minLength={6}
           />
+
+          {/* Connected Accounts Section */}
+          <div className="mt-2 p-4 rounded-lg bg-neutral-900/60 border border-neutral-700/30 flex items-center justify-between group">
+            <div className="flex items-center gap-4">
+              <div className="p-2 rounded-lg bg-neutral-800/60 text-neutral-400 group-hover:text-neutral-200 transition-colors">
+                <GitHubIcon />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-neutral-200 font-semibold text-sm">
+                  GitHub Account
+                </span>
+                <span className="text-neutral-500 text-xs">
+                  {user.hasGithubBound
+                    ? "Your account is linked to GitHub."
+                    : "Link your GitHub account to enable OAuth login."}
+                </span>
+              </div>
+            </div>
+            {user.hasGithubBound ? (
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-healthy-500/10 border border-healthy-500/20 text-healthy-400 select-none">
+                <CheckCircle2 className="w-4 h-4" />
+                <span className="text-xs font-bold uppercase tracking-wider">
+                  Bound
+                </span>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => signIn("github")}
+                className="px-4 py-2 rounded-md bg-neutral-800 hover:bg-neutral-700 border border-neutral-600 text-neutral-200 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+              >
+                Bind Account
+              </button>
+            )}
+          </div>
 
           <div className="flex items-center justify-between mt-2 pt-4 border-t border-neutral-700/40">
             <button

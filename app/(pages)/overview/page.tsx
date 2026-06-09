@@ -38,15 +38,23 @@ export default async function DashboardPage() {
     prisma.logs.findMany({
       where: { repo: { userId } },
       orderBy: { createdAt: "desc" },
-      take: 20,
+      take: 100, // Fetch more to sort accurately
       include: { repo: true },
-    }),
+    }).then(logs => logs.sort((a, b) => {
+      const timeA = new Date((a.metadata as any)?.time || a.createdAt).getTime();
+      const timeB = new Date((b.metadata as any)?.time || b.createdAt).getTime();
+      return timeB - timeA;
+    }).slice(0, 20)),
     prisma.logs.findMany({
       where: { repo: { userId }, type: "PULL_REQUEST" },
       orderBy: { createdAt: "desc" },
-      take: 50,
+      take: 100, // Fetch more to sort accurately
       include: { repo: true },
-    }),
+    }).then(logs => logs.sort((a, b) => {
+      const timeA = new Date((a.metadata as any)?.time || a.createdAt).getTime();
+      const timeB = new Date((b.metadata as any)?.time || b.createdAt).getTime();
+      return timeB - timeA;
+    })),
     prisma.logs.findMany({
       where: {
         repo: { userId },

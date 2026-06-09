@@ -6,6 +6,8 @@ import { motion } from "motion/react";
 import FadeIn from "./FadeIn";
 import { formatDistanceToNow } from "date-fns";
 import { getMoreRepoLogs } from "@/actions/logs";
+import { mergePullRequest } from "@/actions/github";
+import { useToast } from "@/components/ToastProvider";
 
 export type PrMetadata = {
   title?: string;
@@ -34,6 +36,39 @@ function formatTime(timeStr?: string) {
   } catch {
     return timeStr;
   }
+}
+
+function MergeButton({ repoId, prNumber }: { repoId: string; prNumber: number }) {
+  const [isMerging, setIsMerging] = useState(false);
+  const { toast } = useToast();
+
+  const handleMerge = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsMerging(true);
+    const res = await mergePullRequest(repoId, prNumber);
+    setIsMerging(false);
+    if (res.error) {
+      toast(res.error, "error");
+    } else {
+      toast(`Successfully merged PR #${prNumber}`, "success");
+    }
+  };
+
+  return (
+    <button
+      onClick={handleMerge}
+      disabled={isMerging}
+      className="ml-auto mr-4 px-3 py-1.5 bg-purple-600/20 hover:bg-purple-600/40 border border-purple-500/40 rounded-md text-purple-400 text-xs font-bold uppercase tracking-wider transition-all disabled:opacity-50 flex items-center gap-1.5 shrink-0 relative z-20 cursor-pointer shadow-[0_0_10px_rgba(168,85,247,0.1)] hover:shadow-[0_0_15px_rgba(168,85,247,0.3)]"
+    >
+      {isMerging ? (
+        <Loader2 className="w-3 h-3 animate-spin" />
+      ) : (
+        <GitMerge className="w-3 h-3" />
+      )}
+      {isMerging ? "Merging..." : "Merge"}
+    </button>
+  );
 }
 
 export default function PrList({
@@ -161,7 +196,7 @@ export default function PrList({
                     transition={{ duration: 0.2 }}
                   />
 
-                  <div className="flex flex-col gap-px overflow-hidden relative z-10">
+                  <div className="flex flex-col gap-px overflow-hidden relative z-10 flex-1">
                     <p className="text-neutral-200 font-medium group-hover:text-neutral-50 transition-colors duration-150 line-clamp-1">
                       {pr.message}
                     </p>
@@ -186,6 +221,10 @@ export default function PrList({
                       <span>{formatTime(meta.time)}</span>
                     </div>
                   </div>
+
+                  {!isMerged && !isClosed && meta.prNumber && (
+                    <MergeButton repoId={repoId} prNumber={meta.prNumber} />
+                  )}
 
                   <div
                     className={`p-2 rounded-full border shrink-0 relative z-10 ${

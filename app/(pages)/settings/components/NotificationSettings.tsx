@@ -184,7 +184,7 @@ export default function NotificationSettings({
             </div>
             <div className="flex items-center gap-3">
               <Input
-                type="url"
+                type="password"
                 value={discordWebhook}
                 onChange={(e) => setDiscordWebhook(e.target.value)}
                 placeholder="https://discord.com/api/webhooks/..."
@@ -195,7 +195,7 @@ export default function NotificationSettings({
                 type="button"
                 onClick={handleTestDiscord}
                 disabled={!enableDiscord || !discordWebhook || testingDiscord}
-                className="px-4 py-2.5 rounded-lg border border-[#5865F2]/40 text-[#5865F2]/80 font-semibold text-sm hover:bg-[#5865F2]/10 hover:border-[#5865F2]/60 hover:text-[#5865F2] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-center"
+                className="px-4 py-2.5 rounded-lg border border-[#5865F2]/40 text-[#5865F2]/80 font-semibold text-sm hover:bg-[#5865F2]/10 hover:border-[#5865F2]/60 hover:text-[#5865F2] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-center cursor-pointer"
               >
                 {testingDiscord ? "Ping..." : "Test"}
               </button>
@@ -224,7 +224,7 @@ export default function NotificationSettings({
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Input
-                type="text"
+                type="password"
                 value={telegramBotToken}
                 onChange={(e) => setTelegramBotToken(e.target.value)}
                 placeholder="Bot Token: 123456789:ABCdef..."
@@ -233,7 +233,7 @@ export default function NotificationSettings({
               />
               <div className="flex items-center gap-3">
                 <Input
-                  type="text"
+                  type="password"
                   value={telegramChatId}
                   onChange={(e) => setTelegramChatId(e.target.value)}
                   placeholder="Chat ID: -100123456789"
@@ -249,7 +249,7 @@ export default function NotificationSettings({
                     !telegramChatId ||
                     testingTelegram
                   }
-                  className="px-4 py-2.5 rounded-lg border border-[#0088cc]/40 text-[#0088cc]/80 font-semibold text-sm hover:bg-[#0088cc]/10 hover:border-[#0088cc]/60 hover:text-[#0088cc] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-center"
+                  className="px-4 py-2.5 rounded-lg border border-[#0088cc]/40 text-[#0088cc]/80 font-semibold text-sm hover:bg-[#0088cc]/10 hover:border-[#0088cc]/60 hover:text-[#0088cc] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-center cursor-pointer"
                 >
                   {testingTelegram ? "Ping..." : "Test"}
                 </button>
