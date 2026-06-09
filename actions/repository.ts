@@ -47,6 +47,15 @@ export async function addRepo(prevState: ActionState, formData: FormData) {
 
 export async function deleteRepo(repoId: string) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) return { error: "Unauthorized" };
+
+    const repo = await prisma.githubRepo.findUnique({
+      where: { id: repoId, userId: session.user.id },
+    });
+
+    if (!repo) return { error: "Repository not found or unauthorized" };
+
     await prisma.logs.deleteMany({ where: { repoId } });
     await prisma.githubRepo.delete({ where: { id: repoId } });
     revalidatePath("/repository");
@@ -59,6 +68,15 @@ export async function deleteRepo(repoId: string) {
 
 export async function regenerateSecret(repoId: string) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) return { error: "Unauthorized" };
+
+    const repo = await prisma.githubRepo.findUnique({
+      where: { id: repoId, userId: session.user.id },
+    });
+
+    if (!repo) return { error: "Repository not found or unauthorized" };
+
     const webhookSecret = crypto.randomUUID();
     await prisma.githubRepo.update({
       where: { id: repoId },
@@ -74,6 +92,15 @@ export async function regenerateSecret(repoId: string) {
 
 export async function clearRepoLogs(repoId: string) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) return { error: "Unauthorized" };
+
+    const repo = await prisma.githubRepo.findUnique({
+      where: { id: repoId, userId: session.user.id },
+    });
+
+    if (!repo) return { error: "Repository not found or unauthorized" };
+
     await prisma.logs.deleteMany({ where: { repoId } });
     revalidatePath("/repository");
     return { success: true };
@@ -85,6 +112,15 @@ export async function clearRepoLogs(repoId: string) {
 
 export async function toggleRepoTracking(repoId: string, currentStatus: boolean) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) return { error: "Unauthorized" };
+
+    const repo = await prisma.githubRepo.findUnique({
+      where: { id: repoId, userId: session.user.id },
+    });
+
+    if (!repo) return { error: "Repository not found or unauthorized" };
+
     await prisma.githubRepo.update({
       where: { id: repoId },
       data: { isActive: !currentStatus },
@@ -99,6 +135,15 @@ export async function toggleRepoTracking(repoId: string, currentStatus: boolean)
 
 export async function updateRepo(repoId: string, name: string, url: string) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) return { error: "Unauthorized" };
+
+    const repo = await prisma.githubRepo.findUnique({
+      where: { id: repoId, userId: session.user.id },
+    });
+
+    if (!repo) return { error: "Repository not found or unauthorized" };
+
     if (!name) return { error: "Name is required." };
     await prisma.githubRepo.update({
       where: { id: repoId },
@@ -114,6 +159,15 @@ export async function updateRepo(repoId: string, name: string, url: string) {
 
 export async function toggleAutoMerge(repoId: string, currentStatus: boolean) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) return { error: "Unauthorized" };
+
+    const repo = await prisma.githubRepo.findUnique({
+      where: { id: repoId, userId: session.user.id },
+    });
+
+    if (!repo) return { error: "Repository not found or unauthorized" };
+
     await prisma.githubRepo.update({
       where: { id: repoId },
       data: { autoMergePR: !currentStatus },

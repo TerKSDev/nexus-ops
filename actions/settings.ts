@@ -113,6 +113,13 @@ export async function updateNotifications(formData: FormData) {
 
 export async function testDiscordWebhook(url: string) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) return { error: "Unauthorized" };
+
+    if (!url.startsWith("https://discord.com/api/webhooks/")) {
+      return { error: "Invalid Discord Webhook URL. It must start with https://discord.com/api/webhooks/" };
+    }
+
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -130,7 +137,12 @@ export async function testDiscordWebhook(url: string) {
 
 export async function testTelegramWebhook(botToken: string, chatId: string) {
   try {
-    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+    const session = await auth();
+    if (!session?.user?.id) return { error: "Unauthorized" };
+
+    if (!botToken || !chatId) return { error: "Bot token and Chat ID are required." };
+
+    const url = `https://api.telegram.org/bot${encodeURIComponent(botToken)}/sendMessage`;
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

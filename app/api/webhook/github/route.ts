@@ -35,7 +35,10 @@ export async function POST(req: Request) {
     // 安全驗證：確保請求真的是 GitHub 發過來的
     const hmac = crypto.createHmac("sha256", dbRepo.webhookSecret);
     const digest = "sha256=" + hmac.update(buffer).digest("hex");
-    if (signature !== digest) {
+    const signatureBuffer = Buffer.from(signature);
+    const digestBuffer = Buffer.from(digest);
+    
+    if (signatureBuffer.length !== digestBuffer.length || !crypto.timingSafeEqual(signatureBuffer, digestBuffer)) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
 
@@ -188,6 +191,31 @@ export async function POST(req: Request) {
         mappedStatus = "CRITICAL";
       }
 
+      const sha = deploy.sha?.substring(0, 7) || "unknown";
+
+      // 避免 Vercel 等平台同時發送多個相同狀態的 webhook 導致重複通知
+      const recentDeployLogs = await prisma.logs.findMany({
+        where: {
+          repoId: dbRepo.id,
+          type: "DEPLOYMENT",
+          status: mappedStatus,
+          createdAt: {
+            gte: new Date(Date.now() - 5 * 60 * 1000) // 最近 5 分鐘內
+          }
+        },
+        orderBy: { createdAt: "desc" },
+        take: 5
+      });
+
+      const isDuplicate = recentDeployLogs.some(log => {
+        const meta = log.metadata as Record<string, unknown>;
+        return meta.sha === sha && meta.state === deployStatus.state;
+      });
+
+      if (isDuplicate) {
+        return NextResponse.json({ success: true, message: "Duplicate deployment status skipped" });
+      }
+
       await prisma.logs.create({
         data: {
           repoId: dbRepo.id,
@@ -198,7 +226,7 @@ export async function POST(req: Request) {
             state: deployStatus.state,
             environment: deployStatus.environment || deploy.environment,
             url: deployStatus.environment_url || deployStatus.log_url,
-            sha: deploy.sha?.substring(0, 7) || "unknown",
+            sha,
             branch: deploy.ref || "unknown",
             author: deployStatus.creator?.login || "system",
             time: deployStatus.created_at || new Date().toISOString(),
