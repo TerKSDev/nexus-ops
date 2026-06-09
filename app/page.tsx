@@ -1,73 +1,120 @@
 import Link from "next/link";
-import { ArrowRight, TerminalSquare } from "lucide-react";
+import {
+  ArrowRight,
+  TerminalSquare,
+  GitMerge,
+  Triangle,
+  Activity,
+} from "lucide-react";
 
 export default function Landing() {
   return (
     <div className="flex flex-col flex-1 items-center justify-center min-h-screen relative overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-healthy-500/5 rounded-full blur-[120px] pointer-events-none" />
+      {/* Multi-layer ambient glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-healthy-500/[0.07] rounded-full blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-healthy-500/[0.04] rounded-full blur-[80px] pointer-events-none" />
 
-      <div className="relative z-10 flex flex-col items-center flex-1 w-full">
-        {/* Core Card matching Repo empty state */}
-        <div className="flex flex-col items-center justify-center p-12 md:p-20 w-full border-2 border-dashed border-neutral-800 flex-1 bg-neutral-900 backdrop-blur-md relative overflow-hidden group shadow-2xl">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-healthy-500/10 rounded-full blur-[100px] pointer-events-none group-hover:bg-healthy-500/20 transition-colors duration-700 animate-pulse" />
+      {/* Grid background */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,229,255,0.025)_1px,transparent_1px),linear-gradient(to_right,rgba(0,229,255,0.025)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)] pointer-events-none" />
 
-          <div className="w-20 h-20 md:w-24 md:h-24 bg-neutral-900 border border-neutral-700 rounded-2xl flex items-center justify-center mb-10 shadow-2xl relative z-10 rotate-3 group-hover:rotate-0 transition-transform duration-500">
-            <div className="absolute inset-0 bg-linear-to-b from-healthy-500/10 to-transparent opacity-50 rounded-2xl" />
-            <TerminalSquare className="w-10 h-10 md:w-12 md:h-12 text-neutral-500 group-hover:text-healthy-400 transition-colors duration-500 relative z-10" />
-          </div>
-
-          <div className="flex flex-col items-center text-center relative z-10">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="h-10 w-1 bg-linear-to-b from-healthy-500 to-transparent" />
-              <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-linear-to-r from-neutral-50 to-neutral-400 tracking-widest uppercase">
-                Nexus Ops
-              </h1>
-              <div className="h-10 w-1 bg-linear-to-b from-healthy-500 to-transparent rotate-180" />
-            </div>
-
-            <p className="text-base md:text-lg text-neutral-400 mb-12 leading-relaxed max-w-2xl">
-              Your cyberpunk command center. Monitor commits, active pull
-              requests, and real-time deployment logs across all your tracked
-              repositories.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center gap-6">
-              <Link
-                href="/overview"
-                className="group flex items-center justify-center gap-3 bg-healthy-500/10 hover:bg-healthy-500/20 border border-healthy-500/30 hover:border-healthy-500/50 text-healthy-400 px-8 py-3.5 rounded-lg font-medium transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,229,255,0.15)] w-full sm:w-auto"
-              >
-                <span>Initialize System</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link
-                href="#"
-                className="group flex items-center justify-center gap-3 bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 hover:border-neutral-600 text-neutral-400 hover:text-neutral-200 px-8 py-3.5 rounded-lg font-medium transition-all duration-300 backdrop-blur-sm w-full sm:w-auto"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-neutral-500 group-hover:text-neutral-300 transition-colors"
-                >
-                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                </svg>
-                <span>Documentation</span>
-              </Link>
-            </div>
-          </div>
-        </div>
+      {/* Corner bracket decorations — full page corners */}
+      <div className="absolute top-6 left-6 w-10 h-10 pointer-events-none opacity-30">
+        <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-healthy-500 to-transparent" />
+        <div className="absolute top-0 left-0 h-full w-px bg-linear-to-b from-healthy-500 to-transparent" />
+      </div>
+      <div className="absolute top-6 right-6 w-10 h-10 pointer-events-none opacity-30">
+        <div className="absolute top-0 right-0 w-full h-px bg-linear-to-l from-healthy-500 to-transparent" />
+        <div className="absolute top-0 right-0 h-full w-px bg-linear-to-b from-healthy-500 to-transparent" />
+      </div>
+      <div className="absolute bottom-6 left-6 w-10 h-10 pointer-events-none opacity-30">
+        <div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-healthy-500 to-transparent" />
+        <div className="absolute bottom-0 left-0 h-full w-px bg-linear-to-t from-healthy-500 to-transparent" />
+      </div>
+      <div className="absolute bottom-6 right-6 w-10 h-10 pointer-events-none opacity-30">
+        <div className="absolute bottom-0 right-0 w-full h-px bg-linear-to-l from-healthy-500 to-transparent" />
+        <div className="absolute bottom-0 right-0 h-full w-px bg-linear-to-t from-healthy-500 to-transparent" />
       </div>
 
-      {/* Cyberpunk grid bottom */}
-      <div className="absolute bottom-0 left-0 w-full h-[40vh] bg-[linear-gradient(to_top,rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(to_right,rgba(0,229,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:linear-gradient(to_top,black,transparent)] pointer-events-none" />
+      {/* Main content */}
+      <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-3xl">
+        {/* Icon */}
+        <div className="relative mb-10">
+          <div className="w-24 h-24 rounded-full bg-neutral-900/80 border border-healthy-500/20 flex items-center justify-center shadow-[0_0_60px_rgba(0,229,255,0.1)] group-hover:shadow-[0_0_80px_rgba(0,229,255,0.2)] transition-all duration-700">
+            <TerminalSquare className="w-10 h-10 text-healthy-400 drop-shadow-[0_0_10px_rgba(0,229,255,0.5)]" />
+          </div>
+          {/* Layered rings */}
+          <div className="absolute inset-0 rounded-full border border-healthy-500/10 scale-[1.25] animate-pulse" />
+          <div className="absolute inset-0 rounded-full border border-healthy-500/[0.06] scale-[1.6]" />
+        </div>
+
+        {/* Title */}
+        <div className="flex items-center gap-5 mb-4">
+          <div className="w-px h-12 bg-linear-to-b from-transparent via-healthy-500 to-transparent" />
+          <h1 className="text-5xl md:text-6xl font-bold tracking-[0.15em] uppercase">
+            <span className="text-neutral-50">Nexus</span>{" "}
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-healthy-400 to-healthy-200 drop-shadow-[0_0_20px_rgba(0,229,255,0.4)]">
+              Ops
+            </span>
+          </h1>
+          <div className="w-px h-12 bg-linear-to-b from-transparent via-healthy-500 to-transparent" />
+        </div>
+
+        {/* Diamond divider */}
+        <div className="flex items-center gap-4 mb-6 w-full max-w-xs">
+          <div className="flex-1 h-px bg-linear-to-r from-transparent to-healthy-500/30" />
+          <span className="text-healthy-500/50 text-[8px]">◆ ◆ ◆</span>
+          <div className="flex-1 h-px bg-linear-to-l from-transparent to-healthy-500/30" />
+        </div>
+
+        {/* Tagline */}
+        <p className="text-base md:text-lg text-neutral-400 mb-3 leading-relaxed max-w-xl">
+          Your cyberpunk command center. Monitor commits, active pull requests,
+          and real-time deployment logs across all your tracked repositories.
+        </p>
+        <p className="text-[10px] text-neutral-500 uppercase tracking-[0.3em] mb-12">
+          GitHub · Webhooks · Real-time Sync
+        </p>
+
+        {/* Feature pills */}
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
+          {[
+            { icon: GitMerge, label: "Repository Monitor" },
+            { icon: Activity, label: "Activity Feed" },
+            { icon: Triangle, label: "Deployment Tracking" },
+          ].map(({ icon: Icon, label }) => (
+            <div
+              key={label}
+              className="flex items-center gap-2 px-3 py-1.5 bg-neutral-900/80 border border-neutral-700/40 rounded text-neutral-400 text-xs tracking-wider"
+            >
+              <Icon className="w-3 h-3 text-healthy-400/60" />
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA Buttons */}
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm">
+          <Link
+            href="/login"
+            className="group flex items-center justify-center gap-2 w-full text-nowrap bg-linear-to-r from-healthy-600 to-healthy-500 text-neutral-950 px-8 py-3 rounded-lg font-bold hover:from-healthy-500 hover:to-healthy-400 hover:shadow-[0_0_25px_rgba(0,229,255,0.35)] transition-all duration-300 text-sm tracking-wide"
+          >
+            Initialize System
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+
+          <Link
+            href="#"
+            className="flex items-center justify-center gap-2 w-full bg-transparent border border-neutral-700/50 text-neutral-400 hover:text-neutral-200 hover:border-neutral-600/60 hover:bg-neutral-800/40 px-8 py-3 rounded-lg font-medium transition-all duration-200 text-sm tracking-wide"
+          >
+            Documentation
+          </Link>
+        </div>
+
+        {/* Version tag */}
+        <p className="mt-12 text-[9px] text-neutral-600 uppercase tracking-[0.3em]">
+          Nexus Ops · Command Center v1.0
+        </p>
+      </div>
     </div>
   );
 }

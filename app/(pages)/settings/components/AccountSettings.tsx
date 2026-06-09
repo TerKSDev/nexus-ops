@@ -21,10 +21,8 @@ export default function AccountSettings({ user }: AccountSettingsProps) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
-
     const formData = new FormData(e.currentTarget);
     const result = await updateAccount(formData);
-
     if (result.error) {
       toast(result.error, "error");
     } else {
@@ -34,27 +32,31 @@ export default function AccountSettings({ user }: AccountSettingsProps) {
   }
 
   return (
-    <div className="bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden flex flex-col">
-      <div className="p-4 px-5 border-b border-neutral-800 flex items-center justify-between bg-neutral-900 relative z-10">
+    <div className="bg-neutral-900/70 border border-neutral-700/40 rounded-lg overflow-hidden flex flex-col shadow-[0_4px_24px_rgba(0,0,0,0.4)]">
+      {/* Panel Header */}
+      <div className="p-4 px-5 border-b border-neutral-700/40 flex items-center justify-between bg-neutral-800/30 relative z-10">
         <div className="flex items-center gap-3">
-          <div className="p-1.5 bg-neutral-800 rounded-lg border border-neutral-700">
-            <User className="w-4 h-4 text-neutral-300" />
+          <div className="p-1.5 bg-healthy-500/10 rounded border border-healthy-500/20">
+            <User className="w-4 h-4 text-healthy-400/80" />
           </div>
-          <h3 className="text-base font-semibold text-neutral-50 tracking-wide">
+          <h3 className="text-sm font-bold text-neutral-100 tracking-widest uppercase">
             Account Management
           </h3>
+          <div className="w-10 h-px bg-linear-to-r from-neutral-700/60 to-transparent" />
         </div>
+
+        {/* Account type badge */}
         {user.isGuest ? (
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-warning-500/10 border border-warning-500/20 rounded-full select-none">
-            <ShieldAlert className="w-3.5 h-3.5 text-warning-500" />
-            <span className="text-[10px] font-bold text-warning-500 uppercase tracking-wider leading-none">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-warning-500/5 border border-warning-500/15 rounded-sm select-none">
+            <ShieldAlert className="w-3 h-3 text-warning-400" />
+            <span className="text-[9px] font-bold text-warning-400 uppercase tracking-[0.15em] leading-none">
               Guest Account
             </span>
           </div>
         ) : (
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-healthy-500/10 border border-healthy-500/20 rounded-full select-none">
-            <div className="w-1.5 h-1.5 rounded-full bg-healthy-500 shadow-[0_0_8px_rgba(0,229,255,0.8)] animate-pulse" />
-            <span className="text-[10px] font-bold text-healthy-500 uppercase tracking-wider leading-none">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-healthy-500/5 border border-healthy-500/15 rounded-sm select-none">
+            <div className="w-1 h-1 rounded-full bg-healthy-500 shadow-[0_0_5px_rgba(0,229,255,0.8)] animate-pulse" />
+            <span className="text-[9px] font-bold text-healthy-500 uppercase tracking-[0.15em] leading-none">
               Standard Account
             </span>
           </div>
@@ -62,14 +64,15 @@ export default function AccountSettings({ user }: AccountSettingsProps) {
       </div>
 
       <div className="p-6">
+        {/* Guest upgrade notice */}
         {user.isGuest && (
-          <div className="mb-6 p-4 rounded-lg bg-warning-500/10 border border-warning-500/30 flex items-start gap-3 shadow-[inset_0_0_10px_rgba(255,215,0,0.1)]">
-            <ShieldAlert className="w-5 h-5 text-warning-500 mt-0.5" />
+          <div className="mb-6 p-4 rounded-lg bg-warning-500/[0.07] border border-warning-500/20 flex items-start gap-3">
+            <ShieldAlert className="w-4 h-4 text-warning-400 mt-0.5 shrink-0" />
             <div>
-              <p className="text-warning-100 font-medium text-sm">
+              <p className="text-warning-200 font-semibold text-sm">
                 Upgrade your account
               </p>
-              <p className="text-warning-500/80 text-xs mt-1 leading-relaxed">
+              <p className="text-warning-500/70 text-xs mt-1 leading-relaxed">
                 You are currently using a temporary guest account. To secure
                 your data and make it permanent, please provide a valid email
                 and password below.
@@ -78,43 +81,31 @@ export default function AccountSettings({ user }: AccountSettingsProps) {
           </div>
         )}
 
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col justify-center gap-5"
-        >
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <Input
-                type="email"
-                name="email"
-                required
-                defaultValue={user.email || ""}
-                placeholder="commander@nexus.ops"
-              />
-            </div>
-          </div>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <Input
+            type="email"
+            name="email"
+            required
+            defaultValue={user.email || ""}
+            placeholder="commander@nexus.ops"
+          />
+          <Input
+            type="password"
+            name="password"
+            placeholder={
+              user.isGuest
+                ? "Set a strong password..."
+                : "Leave blank to keep current password"
+            }
+            required={user.isGuest}
+            minLength={6}
+          />
 
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <Input
-                type="password"
-                name="password"
-                placeholder={
-                  user.isGuest
-                    ? "Set a strong password..."
-                    : "Leave blank to keep current password"
-                }
-                required={user.isGuest}
-                minLength={6}
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between mt-4">
+          <div className="flex items-center justify-between mt-2 pt-4 border-t border-neutral-700/40">
             <button
               type="button"
               onClick={() => signOut({ callbackUrl: "/login" })}
-              className="text-xs px-4 py-2.5 bg-neutral-900 rounded-md border border-neutral-800 transition-colors duration-300 hover:bg-neutral-800 text-critical-400 flex items-center gap-2"
+              className="flex items-center gap-2 text-xs px-4 py-2.5 rounded border border-neutral-700/50 text-critical-400/80 hover:text-critical-400 hover:border-critical-500/30 hover:bg-critical-500/5 transition-all duration-200 cursor-pointer"
             >
               <LogOut className="w-3 h-3" />
               Sign Out
@@ -123,7 +114,7 @@ export default function AccountSettings({ user }: AccountSettingsProps) {
             <button
               type="submit"
               disabled={loading}
-              className="bg-healthy-500 cursor-pointer text-neutral-950 px-6 py-2.5 rounded-lg font-bold hover:bg-healthy-400 hover:shadow-[0_0_15px_rgba(0,229,255,0.4)] transition-all disabled:opacity-50"
+              className="bg-linear-to-r from-healthy-600 to-healthy-500 cursor-pointer text-neutral-950 px-6 py-2.5 rounded-lg font-bold hover:from-healthy-500 hover:to-healthy-400 hover:shadow-[0_0_20px_rgba(0,229,255,0.3)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-center text-sm"
             >
               {loading ? "Updating..." : "Save Account"}
             </button>

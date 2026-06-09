@@ -14,38 +14,55 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  // 1. Fetch Stats
-  const activeReposCount = await prisma.githubRepo.count({
-    where: { userId: session.user.id, isActive: true },
-  });
+  const userId = session.user.id;
+  const fourteenDaysAgo = subDays(new Date(), 14);
 
-  const totalCommitsCount = await prisma.logs.count({
-    where: { repo: { userId: session.user.id }, type: "COMMIT" },
-  });
-
-  const inactiveReposCount = await prisma.githubRepo.count({
-    where: { userId: session.user.id, isActive: false },
-  });
-
-  // 2. Fetch Global Recent Logs
-  const recentLogs = await prisma.logs.findMany({
-    where: { repo: { userId: session.user.id } },
-    orderBy: { createdAt: "desc" },
-    take: 20,
-    include: { repo: true },
-  });
-
-  // 3. Fetch Active PRs (Recent PR logs)
-  const rawPRs = await prisma.logs.findMany({
-    where: { repo: { userId: session.user.id }, type: "PULL_REQUEST" },
-    orderBy: { createdAt: "desc" },
-    take: 50,
-    include: { repo: true },
-  });
+  // Bundle all database queries in a single Promise.all to prevent sequential waterfall
+  const [
+    activeReposCount,
+    totalCommitsCount,
+    inactiveReposCount,
+    recentLogs,
+    rawPRs,
+    matrixLogs,
+  ] = await Promise.all([
+    prisma.githubRepo.count({
+      where: { userId, isActive: true },
+    }),
+    prisma.logs.count({
+      where: { repo: { userId }, type: "COMMIT" },
+    }),
+    prisma.githubRepo.count({
+      where: { userId, isActive: false },
+    }),
+    prisma.logs.findMany({
+      where: { repo: { userId } },
+      orderBy: { createdAt: "desc" },
+      take: 20,
+      include: { repo: true },
+    }),
+    prisma.logs.findMany({
+      where: { repo: { userId }, type: "PULL_REQUEST" },
+      orderBy: { createdAt: "desc" },
+      take: 50,
+      include: { repo: true },
+    }),
+    prisma.logs.findMany({
+      where: {
+        repo: { userId },
+        createdAt: { gte: fourteenDaysAgo },
+      },
+      select: { createdAt: true },
+    }),
+  ]);
 
   const uniquePRsMap = new Map();
   for (const pr of rawPRs) {
-    const meta = pr.metadata as { prNumber?: number; state?: string; merged?: boolean };
+    const meta = pr.metadata as {
+      prNumber?: number;
+      state?: string;
+      merged?: boolean;
+    };
     if (meta?.prNumber && !uniquePRsMap.has(meta.prNumber)) {
       uniquePRsMap.set(meta.prNumber, pr);
     }
@@ -58,16 +75,6 @@ export default async function DashboardPage() {
       return meta.state === "open" || (!isMerged && !isClosed);
     })
     .slice(0, 6);
-
-  // 4. Fetch Logs for Activity Matrix (last 14 days)
-  const fourteenDaysAgo = subDays(new Date(), 14);
-  const matrixLogs = await prisma.logs.findMany({
-    where: { 
-      repo: { userId: session.user.id },
-      createdAt: { gte: fourteenDaysAgo }
-    },
-    select: { createdAt: true },
-  });
 
   // Calculate Activity Matrix Data
   const activityMap: Record<string, number> = {};
@@ -84,14 +91,22 @@ export default async function DashboardPage() {
 
   return (
     <div className="p-8 px-12 w-full max-w-[1400px] mx-auto flex flex-col gap-10">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="h-12 w-1 bg-linear-to-b from-healthy-500 to-transparent" />
-          <div className="flex flex-col gap-0.5">
-            <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-neutral-50 to-neutral-400 tracking-tight uppercase">
-              Overview
-            </h1>
-            <p className="text-neutral-400 tracking-wide text-base">
+      {/* Page Header — HSR style */}
+      <div className="flex items-center gap-4">
+        <div className="flex flex-col items-center gap-1 self-stretch py-0.5">
+          <div className="w-px flex-1 bg-linear-to-b from-healthy-500 via-healthy-500/40 to-transparent" />
+          <span className="text-healthy-500 text-[7px] leading-none">◆</span>
+        </div>
+        <div className="flex flex-col gap-1">
+          <span className="text-[10px] text-healthy-500/50 tracking-[0.3em] uppercase font-medium">
+            System Dashboard
+          </span>
+          <h1 className="text-3xl font-bold text-neutral-50 tracking-widest uppercase leading-none">
+            Overview
+          </h1>
+          <div className="flex items-center gap-2 mt-0.5">
+            <div className="h-px w-8 bg-linear-to-r from-healthy-500/40 to-transparent" />
+            <p className="text-neutral-400 text-sm">
               View all of your system status and active alerts.
             </p>
           </div>
@@ -109,16 +124,12 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         {/* LEFT COLUMN (2/3) */}
         <div className="xl:col-span-2 flex flex-col gap-4">
-          {/* Activity Matrix */}
           <ActivityMatrix matrixDays={matrixDays} />
-
-          {/* Recent Activity */}
           <GlobalActivityFeed recentLogs={recentLogs} />
         </div>
 
         {/* RIGHT COLUMN (1/3) */}
         <div className="xl:col-span-1 flex flex-col gap-4">
-          {/* Active PRs */}
           <PendingActions recentPRs={recentPRs} />
         </div>
       </div>

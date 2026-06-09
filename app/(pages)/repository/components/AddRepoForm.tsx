@@ -42,9 +42,9 @@ export default function AddRepoForm() {
   return (
     <>
       <form action={formAction} className="flex flex-col justify-center gap-1">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <Input
-            className="w-82"
+            className="min-w-72"
             placeholder="https://github.com/username/repo"
             name="url"
             type="text"
@@ -53,7 +53,7 @@ export default function AddRepoForm() {
           <button
             type="submit"
             disabled={isPending}
-            className="bg-healthy-500 cursor-pointer text-neutral-950 px-6 py-2.5 rounded-lg font-bold hover:bg-healthy-400 hover:shadow-[0_0_15px_rgba(0,229,255,0.4)] transition-all text-nowrap"
+            className="relative overflow-hidden flex items-center justify-center bg-linear-to-r from-healthy-600 to-healthy-500 cursor-pointer text-neutral-950 px-6 py-2.5 rounded-lg font-bold hover:from-healthy-500 hover:to-healthy-400 hover:shadow-[0_0_20px_rgba(0,229,255,0.3)] transition-all duration-300 text-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isPending ? "Adding..." : "Add Repo"}
           </button>

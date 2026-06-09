@@ -36,38 +36,43 @@ export function ConfirmModal({
 
   const isValid = requireInput ? inputVal === requireInput : true;
 
-  const btnBg = {
-    default: "bg-healthy-500 hover:bg-healthy-400 text-neutral-950",
-    danger: "bg-critical-500 hover:bg-critical-400 text-white",
-    warning: "bg-warning-500 hover:bg-warning-400 text-neutral-950",
+  const btnStyles = {
+    default:
+      "bg-linear-to-r from-healthy-600 to-healthy-500 hover:from-healthy-500 hover:to-healthy-400 text-neutral-950 hover:shadow-[0_0_15px_rgba(0,229,255,0.3)]",
+    danger:
+      "bg-linear-to-r from-critical-700 to-critical-500 hover:from-critical-600 hover:to-critical-400 text-white hover:shadow-[0_0_15px_rgba(255,0,123,0.3)]",
+    warning:
+      "bg-linear-to-r from-warning-700 to-warning-500 hover:from-warning-600 hover:to-warning-400 text-neutral-950 hover:shadow-[0_0_15px_rgba(255,215,0,0.3)]",
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} variant={variant}>
       <div className="flex flex-col gap-4">
-        <div className="text-sm text-neutral-400">{description}</div>
+        <div className="text-sm text-neutral-400 leading-relaxed">
+          {description}
+        </div>
 
         {requireInput && (
           <Input
             value={inputVal}
             onChange={(e) => setInputVal(e.target.value)}
-            placeholder={`Type ${requireInput} to confirm`}
+            placeholder={`Type "${requireInput}" to confirm`}
             variant={variant === "warning" ? "default" : variant}
           />
         )}
 
-        <div className="flex gap-3 mt-4">
+        <div className="flex gap-3 mt-2">
           <button
             onClick={onClose}
             disabled={isLoading}
-            className="flex-1 py-2.5 bg-neutral-800 text-neutral-200 cursor-pointer rounded-lg font-bold hover:bg-neutral-700 transition-all disabled:opacity-50"
+            className="flex-1 py-2.5 text-center bg-neutral-800/70 text-neutral-300 cursor-pointer rounded-lg font-medium hover:bg-neutral-700/80 hover:text-neutral-100 transition-all duration-200 disabled:opacity-50 border border-neutral-700/50 text-sm"
           >
             {cancelText}
           </button>
           <button
             onClick={onConfirm}
             disabled={!isValid || isLoading}
-            className={`flex-1 py-2.5 rounded-lg cursor-pointer font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 ${btnBg[variant]}`}
+            className={`flex-1 py-2.5 text-center rounded-lg cursor-pointer font-bold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:from-neutral-700 disabled:to-neutral-700 disabled:shadow-none flex items-center justify-center gap-2 text-sm ${btnStyles[variant]}`}
           >
             {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
             {confirmText}

@@ -13,7 +13,9 @@ import {
   Edit3,
   X,
   Waypoints,
+  Download,
 } from "lucide-react";
+import { motion } from "motion/react";
 import {
   deleteRepo,
   regenerateSecret,
@@ -30,6 +32,48 @@ interface ActionModalProps {
   isActive: boolean;
   isOpen: boolean;
   onClose: () => void;
+}
+
+/** Shared corner bracket decoration for HSR-style modals */
+function CornerBrackets() {
+  return (
+    <>
+      <div className="absolute top-3 left-3 w-5 h-5 pointer-events-none">
+        <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-healthy-500/50 to-transparent" />
+        <div className="absolute top-0 left-0 h-full w-px bg-linear-to-b from-healthy-500/50 to-transparent" />
+      </div>
+      <div className="absolute top-3 right-3 w-5 h-5 pointer-events-none">
+        <div className="absolute top-0 right-0 w-full h-px bg-linear-to-l from-healthy-500/50 to-transparent" />
+        <div className="absolute top-0 right-0 h-full w-px bg-linear-to-b from-healthy-500/50 to-transparent" />
+      </div>
+      <div className="absolute bottom-3 left-3 w-5 h-5 pointer-events-none">
+        <div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-healthy-500/50 to-transparent" />
+        <div className="absolute bottom-0 left-0 h-full w-px bg-linear-to-t from-healthy-500/50 to-transparent" />
+      </div>
+      <div className="absolute bottom-3 right-3 w-5 h-5 pointer-events-none">
+        <div className="absolute bottom-0 right-0 w-full h-px bg-linear-to-l from-healthy-500/50 to-transparent" />
+        <div className="absolute bottom-0 right-0 h-full w-px bg-linear-to-t from-healthy-500/50 to-transparent" />
+      </div>
+    </>
+  );
+}
+
+/** Shared modal panel wrapper with HSR entry animation */
+function ModalPanel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-950/85 backdrop-blur-sm px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="bg-neutral-900/95 border border-neutral-700/50 p-10 rounded-lg max-w-md w-full relative overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_0_1px_rgba(0,229,255,0.04)]"
+      >
+        <div className="absolute top-0 right-0 w-64 h-64 bg-healthy-500/[0.04] rounded-full blur-[60px] pointer-events-none -mt-12 -mr-12" />
+        <CornerBrackets />
+        {children}
+      </motion.div>
+    </div>
+  );
 }
 
 export default function ActionModal({
@@ -64,7 +108,6 @@ export default function ActionModal({
       setIsConfirmingDelete(true);
       return;
     }
-
     setIsDeleting(true);
     await deleteRepo(repoId);
     onClose();
@@ -75,7 +118,6 @@ export default function ActionModal({
       setIsConfirmingClear(true);
       return;
     }
-
     setIsClearing(true);
     await clearRepoLogs(repoId);
     setIsConfirmingClear(false);
@@ -117,278 +159,271 @@ export default function ActionModal({
     const payloadUrl = "https://nexus-ops-roan.vercel.app/api/webhook/github";
 
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-950/80 backdrop-blur-sm px-4">
-        <div className="bg-neutral-900 border border-neutral-800 p-10 rounded-lg max-w-md w-full relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-healthy-500/5 rounded-full blur-[60px] pointer-events-none -mt-12 -mr-12" />
-
-          <div className="flex flex-col items-center text-center mb-8 relative z-10">
-            <div className="w-16 h-16 bg-healthy-500/20 text-healthy-400 rounded-full flex items-center justify-center mb-6">
-              <KeyRound className="w-8 h-8 drop-shadow-[0_0_5px_rgba(0,229,255,0.5)]" />
+      <ModalPanel>
+        <div className="flex flex-col items-center text-center mb-8 relative z-10">
+          <div className="relative mb-6">
+            <div className="w-16 h-16 rounded-full bg-neutral-800/80 border border-healthy-500/30 flex items-center justify-center shadow-[0_0_30px_rgba(0,229,255,0.1)]">
+              <KeyRound className="w-8 h-8 text-healthy-400 drop-shadow-[0_0_8px_rgba(0,229,255,0.5)]" />
             </div>
-            <h2 className="text-2xl font-bold text-neutral-50 mb-2">
-              Secret Regenerated
-            </h2>
-            <p className="text-neutral-400 text-sm">
-              Please save your new Webhook Secret now. For security reasons,{" "}
-              <strong className="text-warning-500">
-                it will never be shown again
-              </strong>
-              .
-            </p>
+            <div className="absolute inset-0 rounded-full border border-healthy-500/10 scale-[1.3]" />
           </div>
+          <h2 className="text-2xl font-bold text-neutral-50 mb-2 tracking-wide">
+            Secret Regenerated
+          </h2>
+          <p className="text-neutral-400 text-sm leading-relaxed">
+            Please save your new Webhook Secret now. For security reasons,{" "}
+            <strong className="text-warning-400 font-semibold">
+              it will never be shown again
+            </strong>
+            .
+          </p>
+        </div>
 
-          <div className="flex flex-col gap-4 mb-8">
-            <div className="flex flex-col gap-1.5">
-              <span className="text-xs px-px font-medium text-neutral-400">
-                Payload URL:
+        <div className="flex flex-col gap-4 mb-8">
+          <div className="flex flex-col gap-1.5">
+            <span className="text-[11px] px-px font-medium text-neutral-400 tracking-wider uppercase">
+              Payload URL
+            </span>
+            <div
+              onClick={() => handleCopy(payloadUrl, "url")}
+              className="bg-neutral-950/80 hover:bg-neutral-800/60 group cursor-pointer p-4 py-3 rounded-lg border border-neutral-700/40 hover:border-neutral-600/60 transition-all relative z-10 font-mono flex justify-between items-center gap-4"
+            >
+              <span className="break-all select-all text-xs text-neutral-300">
+                {payloadUrl}
               </span>
-              <div
-                onClick={() => handleCopy(payloadUrl, "url")}
-                className="bg-neutral-950 hover:bg-neutral-900 group cursor-pointer p-4 py-3 rounded-lg border border-neutral-800 hover:border-neutral-700 transition-all relative z-10 font-mono text-sm text-neutral-300 flex justify-between items-center gap-4"
-              >
-                <span className="break-all select-all">{payloadUrl}</span>
-                {copied === "url" ? (
-                  <Check className="w-4 h-4 text-healthy-500 shrink-0" />
-                ) : (
-                  <Copy className="w-4 h-4 text-neutral-600 group-hover:text-neutral-400 shrink-0 transition-colors" />
-                )}
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <span className="text-xs px-px font-medium text-neutral-400">
-                New Webhook Secret:
-              </span>
-              <div
-                onClick={() => handleCopy(newSecret, "secret")}
-                className="bg-neutral-950 hover:bg-neutral-900 group cursor-pointer p-4 py-3 rounded-lg border border-neutral-800 hover:border-neutral-700 transition-all relative z-10 font-mono text-sm text-neutral-300 flex justify-between items-center gap-4"
-              >
-                <span className="break-all select-all">{newSecret}</span>
-                {copied === "secret" ? (
-                  <Check className="w-4 h-4 text-healthy-500 shrink-0" />
-                ) : (
-                  <Copy className="w-4 h-4 text-neutral-600 group-hover:text-neutral-400 shrink-0 transition-colors" />
-                )}
-              </div>
+              {copied === "url" ? (
+                <Check className="w-4 h-4 text-healthy-400 shrink-0" />
+              ) : (
+                <Copy className="w-4 h-4 text-neutral-600 group-hover:text-neutral-300 shrink-0 transition-colors" />
+              )}
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 relative z-10">
-            <button
-              onClick={() => {
-                const content = `GITHUB_WEBHOOK_PAYLOAD_URL=${payloadUrl}\nGITHUB_WEBHOOK_SECRET=${newSecret}`;
-                const blob = new Blob([content], { type: "text/plain" });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = `nexus-ops-webhook-secret.txt`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-              }}
-              className="w-full bg-neutral-800 text-neutral-200 py-2.5 cursor-pointer rounded-lg font-medium hover:bg-neutral-700 transition-all flex items-center justify-center gap-2"
+          <div className="flex flex-col gap-1.5">
+            <span className="text-[11px] px-px font-medium text-neutral-400 tracking-wider uppercase">
+              New Webhook Secret
+            </span>
+            <div
+              onClick={() => handleCopy(newSecret, "secret")}
+              className="bg-neutral-950/80 hover:bg-neutral-800/60 group cursor-pointer p-4 py-3 rounded-lg border border-neutral-700/40 hover:border-neutral-600/60 transition-all relative z-10 font-mono flex justify-between items-center gap-4"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" x2="12" y1="15" y2="3" />
-              </svg>
-              Download as .txt
-            </button>
-            <button
-              onClick={onClose}
-              className="w-full bg-healthy-500 text-neutral-950 py-2.5 cursor-pointer rounded-lg font-bold hover:bg-healthy-400 hover:shadow-[0_0_15px_rgba(0,229,255,0.4)] transition-all"
-            >
-              I have saved it, Close
-            </button>
+              <span className="break-all select-all text-xs text-neutral-300">
+                {newSecret}
+              </span>
+              {copied === "secret" ? (
+                <Check className="w-4 h-4 text-healthy-400 shrink-0" />
+              ) : (
+                <Copy className="w-4 h-4 text-neutral-600 group-hover:text-neutral-300 shrink-0 transition-colors" />
+              )}
+            </div>
           </div>
         </div>
-      </div>
+
+        <div className="flex flex-col gap-3 relative z-10">
+          <button
+            onClick={() => {
+              const content = `GITHUB_WEBHOOK_PAYLOAD_URL=${payloadUrl}\nGITHUB_WEBHOOK_SECRET=${newSecret}`;
+              const blob = new Blob([content], { type: "text/plain" });
+              const blobUrl = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = blobUrl;
+              a.download = `nexus-ops-webhook-secret.txt`;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(blobUrl);
+            }}
+            className="w-full flex items-center justify-center gap-2 bg-neutral-800/80 hover:bg-neutral-700/80 text-neutral-200 py-2.5 cursor-pointer rounded-lg font-medium transition-all duration-300 border border-neutral-700/50 hover:border-neutral-600/60"
+          >
+            <Download className="w-4 h-4" />
+            Download as .txt
+          </button>
+          <button
+            onClick={onClose}
+            className="w-full bg-linear-to-r from-healthy-600 to-healthy-500 text-neutral-950 py-2.5 cursor-pointer rounded-lg font-bold hover:from-healthy-500 hover:to-healthy-400 hover:shadow-[0_0_20px_rgba(0,229,255,0.3)] transition-all duration-300"
+          >
+            I have saved it, Close
+          </button>
+        </div>
+      </ModalPanel>
     );
   }
 
   // 編輯模式
   if (isEditing) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-950/80 backdrop-blur-sm px-4">
-        <div className="bg-neutral-900 border border-neutral-800 p-8 rounded-lg max-w-md w-full relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-64 h-64 bg-healthy-500/5 rounded-full blur-[60px] pointer-events-none -mt-12 -mr-12" />
-
-          <div className="flex items-center justify-between mb-8 relative z-10">
-            <h3 className="text-lg font-bold text-neutral-50 tracking-wide flex items-center gap-4">
-              <Edit3 className="w-4 h-4 text-healthy-500" />
-              Edit Repository
-            </h3>
-            <button
-              onClick={() => setIsEditing(false)}
-              className="text-neutral-500 hover:text-neutral-100 cursor-pointer transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          <div className="flex flex-col gap-8">
-            <div className="flex flex-col gap-4 relative z-10">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-neutral-200 px-px">
-                  Display Name
-                </label>
-                <Input
-                  type="text"
-                  value={editName}
-                  onChange={(e) => setEditName(e.target.value)}
-                  placeholder="NexusOps"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-neutral-200 px-px">
-                  GitHub URL
-                </label>
-                <Input
-                  type="url"
-                  value={editUrl}
-                  onChange={(e) => setEditUrl(e.target.value)}
-                  placeholder="https://github.com/username/repo"
-                />
-              </div>
-            </div>
-
-            <button
-              onClick={handleSaveEdit}
-              disabled={isSaving || !editName}
-              className="w-full bg-healthy-500 cursor-pointer hover:bg-healthy-600 text-neutral-950 py-2.5 rounded-lg disabled:cursor-not-allowed font-bold disabled:bg-neutral-700 disabled:text-neutral-500 flex items-center justify-center gap-2 transition-colors duration-300"
-            >
-              {isSaving ? "Saving..." : "Save Changes"}
-            </button>
-          </div>
+      <ModalPanel>
+        <div className="flex items-center justify-between mb-8 relative z-10">
+          <h3 className="text-lg font-bold text-neutral-50 tracking-widest uppercase flex items-center gap-3">
+            <Edit3 className="w-4 h-4 text-healthy-400" />
+            Edit Repository
+          </h3>
+          <button
+            onClick={() => setIsEditing(false)}
+            className="text-neutral-500 hover:text-neutral-100 cursor-pointer transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
-      </div>
+
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-4 relative z-10">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[11px] font-medium text-neutral-400 px-px tracking-wider uppercase">
+                Display Name
+              </label>
+              <Input
+                type="text"
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                placeholder="NexusOps"
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[11px] font-medium text-neutral-400 px-px tracking-wider uppercase">
+                GitHub URL
+              </label>
+              <Input
+                type="url"
+                value={editUrl}
+                onChange={(e) => setEditUrl(e.target.value)}
+                placeholder="https://github.com/username/repo"
+              />
+            </div>
+          </div>
+
+          <button
+            onClick={handleSaveEdit}
+            disabled={isSaving || !editName}
+            className="w-full bg-linear-to-r from-healthy-600 to-healthy-500 cursor-pointer text-neutral-950 py-2.5 rounded-lg font-bold hover:from-healthy-500 hover:to-healthy-400 hover:shadow-[0_0_20px_rgba(0,229,255,0.3)] disabled:cursor-not-allowed disabled:opacity-50 disabled:from-neutral-700 disabled:to-neutral-700 disabled:text-neutral-400 transition-all duration-300"
+          >
+            {isSaving ? "Saving..." : "Save Changes"}
+          </button>
+        </div>
+      </ModalPanel>
     );
   }
 
   // 預設的管理選單畫面
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-950/80 backdrop-blur-sm px-4">
-      <div className="bg-neutral-900 border border-neutral-800 p-10 rounded-lg max-w-md w-full relative overflow-hidden">
-        {/* 背景光暈效果 */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-healthy-500/5 rounded-full blur-[60px] pointer-events-none -mt-12 -mr-12" />
-
-        <div className="flex flex-col items-center text-center mb-8 relative z-10">
-          <div className="w-16 h-16 bg-healthy-500/20 text-healthy-400 rounded-full flex items-center justify-center mb-6">
-            <Waypoints className="w-8 h-8 drop-shadow-[0_0_5px_rgba(0,229,255,0.5)]" />
+    <ModalPanel>
+      <div className="flex flex-col items-center text-center mb-8 relative z-10">
+        <div className="relative mb-5">
+          <div className="w-16 h-16 rounded-full bg-neutral-800/80 border border-healthy-500/30 flex items-center justify-center shadow-[0_0_30px_rgba(0,229,255,0.1)]">
+            <Waypoints className="w-8 h-8 text-healthy-400 drop-shadow-[0_0_8px_rgba(0,229,255,0.4)]" />
           </div>
-          <h2 className="text-2xl font-bold text-neutral-50 mb-2">
-            {repoName}
-          </h2>
-          {!isActive && (
-            <strong className="text-warning-500 text-sm">
-              Repository tracking is paused.
-            </strong>
-          )}
+          <div className="absolute inset-0 rounded-full border border-healthy-500/10 scale-[1.3]" />
         </div>
-
-        <div className="flex flex-col gap-4 relative z-10">
-          <div className="grid grid-cols-2 gap-4">
-            {/* Edit Button */}
-            <button
-              onClick={() => setIsEditing(true)}
-              className="flex items-center justify-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100 py-2.5 rounded-lg font-medium transition-all duration-300 cursor-pointer"
-            >
-              <Edit3 className="w-4 h-4" />
-              Edit
-            </button>
-
-            {/* Pause/Resume Button */}
-            <button
-              onClick={handleToggleTracking}
-              disabled={isToggling}
-              className="flex items-center justify-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100 py-2.5 rounded-lg font-medium transition-all duration-300 cursor-pointer disabled:opacity-50"
-            >
-              {isToggling ? (
-                <RefreshCw className="w-4 h-4 animate-spin" />
-              ) : isActive ? (
-                <>
-                  <PauseCircle className="w-4 h-4" />
-                  Pause
-                </>
-              ) : (
-                <>
-                  <PlayCircle className="w-4 h-4 text-healthy-400" />
-                  <span className="text-healthy-400">Resume</span>
-                </>
-              )}
-            </button>
+        <h2 className="text-xl font-bold text-neutral-50 mb-1 tracking-widest uppercase">
+          {repoName}
+        </h2>
+        {!isActive && (
+          <div className="flex items-center gap-1.5 mt-1">
+            <div className="w-1 h-1 bg-warning-500 shadow-[0_0_4px_rgba(255,215,0,0.6)]" />
+            <span className="text-warning-400 text-xs tracking-wider">
+              Repository tracking is paused
+            </span>
           </div>
-
-          {/* Regenerate Secret Button */}
-          <button
-            onClick={handleRegenerate}
-            disabled={isRegenerating}
-            className="w-full flex items-center justify-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100 py-2.5 rounded-lg font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 mb-4"
-          >
-            <RefreshCw
-              className={`w-4 h-4 ${isRegenerating ? "animate-spin" : ""}`}
-            />
-            Regenerate Webhook Secret
-          </button>
-
-          <div className="grid grid-cols-2 gap-4">
-            {/* Clear Logs Button */}
-            <button
-              onClick={handleClearLogs}
-              disabled={isClearing}
-              className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 ${
-                isConfirmingClear
-                  ? "bg-warning-500/20 hover:bg-warning-500/25 text-warning-500 border border-warning-700"
-                  : "bg-neutral-950 border border-warning-700 text-warning-500 hover:bg-neutral-900"
-              }`}
-            >
-              <Eraser className="w-4 h-4" />
-              {isClearing
-                ? "Clearing..."
-                : isConfirmingClear
-                  ? "Confirm?"
-                  : "Clear Logs"}
-            </button>
-
-            {/* Delete Repo Button */}
-            <button
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 ${
-                isConfirmingDelete
-                  ? "bg-critical-500/20 hover:bg-critical-500/25 text-critical-500 border border-critical-700"
-                  : "bg-neutral-950 border border-critical-700 text-critical-400 hover:bg-neutral-900"
-              }`}
-            >
-              <Trash2 className="w-4 h-4" />
-              {isDeleting
-                ? "Deleting..."
-                : isConfirmingDelete
-                  ? "Confirm?"
-                  : "Delete Repo"}
-            </button>
-          </div>
-          <button
-            onClick={onClose}
-            className="flex items-center justify-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-100 py-2.5 rounded-lg font-medium transition-all duration-300 cursor-pointer"
-          >
-            Cancel
-          </button>
-        </div>
+        )}
       </div>
-    </div>
+
+      <div className="flex flex-col gap-3 relative z-10">
+        <div className="grid grid-cols-2 gap-3">
+          {/* Edit */}
+          <button
+            onClick={() => setIsEditing(true)}
+            className="flex items-center justify-center gap-2 bg-neutral-800/70 hover:bg-neutral-700/80 text-neutral-200 py-2.5 rounded-lg font-medium transition-all duration-200 cursor-pointer border border-neutral-700/50 hover:border-neutral-600/60 text-sm"
+          >
+            <Edit3 className="w-3.5 h-3.5" />
+            Edit
+          </button>
+
+          {/* Pause / Resume */}
+          <button
+            onClick={handleToggleTracking}
+            disabled={isToggling}
+            className="flex items-center justify-center gap-2 bg-neutral-800/70 hover:bg-neutral-700/80 text-neutral-200 py-2.5 rounded-lg font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 border border-neutral-700/50 hover:border-neutral-600/60 text-sm"
+          >
+            {isToggling ? (
+              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+            ) : isActive ? (
+              <>
+                <PauseCircle className="w-3.5 h-3.5" />
+                Pause
+              </>
+            ) : (
+              <>
+                <PlayCircle className="w-3.5 h-3.5 text-healthy-400" />
+                <span className="text-healthy-400">Resume</span>
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Regenerate Secret */}
+        <button
+          onClick={handleRegenerate}
+          disabled={isRegenerating}
+          className="w-full flex items-center justify-center gap-2 bg-neutral-800/70 hover:bg-neutral-700/80 text-neutral-200 py-2.5 rounded-lg font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 border border-neutral-700/50 hover:border-neutral-600/60 text-sm"
+        >
+          <RefreshCw
+            className={`w-3.5 h-3.5 ${isRegenerating ? "animate-spin" : ""}`}
+          />
+          Regenerate Webhook Secret
+        </button>
+
+        {/* Separator */}
+        <div className="flex items-center gap-3 my-1">
+          <div className="flex-1 h-px bg-linear-to-r from-transparent via-neutral-700/40 to-transparent" />
+          <span className="text-neutral-700 text-[8px]">◆</span>
+          <div className="flex-1 h-px bg-linear-to-r from-transparent via-neutral-700/40 to-transparent" />
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          {/* Clear Logs */}
+          <button
+            onClick={handleClearLogs}
+            disabled={isClearing}
+            className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 text-sm border ${
+              isConfirmingClear
+                ? "bg-warning-500/15 hover:bg-warning-500/20 text-warning-400 border-warning-700/50"
+                : "bg-neutral-950/60 border-warning-700/40 text-warning-500/80 hover:bg-neutral-900/80 hover:text-warning-400"
+            }`}
+          >
+            <Eraser className="w-3.5 h-3.5" />
+            {isClearing
+              ? "Clearing..."
+              : isConfirmingClear
+                ? "Confirm?"
+                : "Clear Logs"}
+          </button>
+
+          {/* Delete Repo */}
+          <button
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 text-sm border ${
+              isConfirmingDelete
+                ? "bg-critical-500/15 hover:bg-critical-500/20 text-critical-400 border-critical-700/50"
+                : "bg-neutral-950/60 border-critical-700/40 text-critical-500/80 hover:bg-neutral-900/80 hover:text-critical-400"
+            }`}
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            {isDeleting
+              ? "Deleting..."
+              : isConfirmingDelete
+                ? "Confirm?"
+                : "Delete Repo"}
+          </button>
+        </div>
+
+        <button
+          onClick={onClose}
+          className="flex items-center justify-center gap-2 bg-neutral-800/70 hover:bg-neutral-700/80 text-neutral-400 hover:text-neutral-200 py-2.5 rounded-lg font-medium transition-all duration-200 cursor-pointer border border-neutral-700/40 text-sm mt-1"
+        >
+          Cancel
+        </button>
+      </div>
+    </ModalPanel>
   );
 }
