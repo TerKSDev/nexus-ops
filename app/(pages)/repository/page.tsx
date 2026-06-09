@@ -70,6 +70,7 @@ export default async function RepositoryPage() {
               const rawCommits = sortedLogs.filter(
                 (log) => log.type === "COMMIT",
               );
+              console.log("Latest commit branch:", rawCommits[0]?.metadata);
 
               const rawPrs = sortedLogs.filter(
                 (log) => log.type === "PULL_REQUEST",
